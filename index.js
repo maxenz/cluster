@@ -14,8 +14,8 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(bodyParser.json());
 // Connect to Mongoose and set connection variable
-mongoose.connect('mongodb://localhost/resthub');
-const db = mongoose.connection;
+// mongoose.connect('mongodb://localhost/resthub');
+// const db = mongoose.connection;
 // Setup server port
 const port = process.env.PORT || 5000;
 // Send message for default URL
