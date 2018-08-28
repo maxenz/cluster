@@ -1,5 +1,5 @@
 {
-  "name": "resthub",
+  "name": "cluster3d-server",
   "version": "1.0.0",
   "description": "Rest api for cluster3d",
   "main": "index.js",
