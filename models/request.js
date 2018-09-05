@@ -40,7 +40,7 @@ const requestSchema = mongoose.Schema({
 
 });
 
-const Request = module.exports = mongoose.model('request', requestSchema);
+const Request = module.exports = mongoose.model('requests', requestSchema);
 module.exports.get = function (callback, limit) {
   Request.find(callback).limit(limit);
 };

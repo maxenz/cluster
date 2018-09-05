@@ -15,7 +15,7 @@ const printerSchema = mongoose.Schema({
   }
 });
 
-const Printer = module.exports = mongoose.model('printer', printerSchema);
+const Printer = module.exports = mongoose.model('printers', printerSchema);
 module.exports.get = function (callback, limit) {
   Printer.find(callback).limit(limit);
 };
