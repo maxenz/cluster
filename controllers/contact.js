@@ -65,7 +65,7 @@ exports.update = function (req, res) {
     });
   });
 };
-// Handle delete contact
+
 exports.delete = function (req, res) {
   Contact.remove({
     _id: req.params.contact_id

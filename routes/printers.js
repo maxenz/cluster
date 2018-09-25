@@ -6,8 +6,7 @@ router.route('/printers')
   .get(controller.index)
   .post(controller.new);
 router.route('/printers/:printer_id')
-  .get(controller.view)
-  .patch(controller.update)
+  // .get(controller.view)
   .put(controller.update)
   .delete(controller.delete);
 
