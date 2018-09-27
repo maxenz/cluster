@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const requestSchema = mongoose.Schema({
-  colorType: {
+  color_type: {
     type: Number,
     required: true
   },
@@ -19,7 +19,6 @@ const requestSchema = mongoose.Schema({
   },
   finish_printing_time: {
     type: Date,
-    required: true,
   },
   material_type: {
     type: Number,

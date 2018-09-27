@@ -18,7 +18,12 @@ exports.index = function (req, res) {
 
 exports.new = function (req, res) {
   let request = new Request();
-  request.name = req.body.name ? req.body.name : printer.name;
+  request.material_type = req.body.material_type;
+  request.color_type = req.body.color_type;
+  request.diameter = req.body.diameter;
+  request.status = req.body.status;
+  request.created_time = req.body.created_time;
+  request.file_name = req.body.file_name;
 
   request.save(function (err) {
     if (err)
