@@ -80,7 +80,8 @@ router.post('/login', (req, res) => {
             const payload = {
               id: user.id,
               name: user.name,
-              avatar: user.avatar
+              avatar: user.avatar,
+              admin: user.admin,
             };
             jwt.sign(payload, 'secret', {
               expiresIn: 3600
@@ -106,7 +107,8 @@ router.get('/me', passport.authenticate('jwt', { session: false }), (req, res) =
   return res.json({
     id: req.user.id,
     name: req.user.name,
-    email: req.user.email
+    email: req.user.email,
+    admin: req.user.admin,
   });
 });
 

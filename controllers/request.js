@@ -1,4 +1,6 @@
 Request = require('../models/request');
+require('mongoose-money');
+const Money = require('moneyjs');
 
 exports.index = function (req, res) {
   Request.get(function (err, requests) {
@@ -26,11 +28,27 @@ exports.new = function (req, res) {
   request.file_name = req.body.file_name;
 
   request.save(function (err) {
-    if (err)
+    if (err) {
       res.json(err);
+    }
     res.json({
       message: 'New request created!',
       data: request
     });
   });
+};
+
+exports.update = (req, res) => {
+  Request.findByIdAndUpdate(req.params.request_id, {
+    ...req.body,
+    price: req.body.price.amount ? new Money(req.body.price.amount) : new Money(req.body.price),
+  }, {new: true}, (err, doc) => {
+    if (err) {
+      res.json(err);
+    }
+    res.json({
+      message: 'Updated request is',
+      data: doc
+    });
+  })
 };

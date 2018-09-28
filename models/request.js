@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
+require('mongoose-money');
 
 const requestSchema = mongoose.Schema({
   color_type: {
@@ -24,7 +26,8 @@ const requestSchema = mongoose.Schema({
     type: Number,
   },
   price: {
-    type: mongoose.Schema.Types.Decimal128,
+    type: Schema.Types.Money,
+    index: true,
   },
   start_printing_time: {
     type: Date,
@@ -35,8 +38,11 @@ const requestSchema = mongoose.Schema({
   },
   total_printing_time: {
     type: Number,
-  }
-
+  },
+  selected_printer_id: {
+    type: Schema.Types.ObjectId,
+    ref: 'Printer'
+  },
 });
 
 const Request = module.exports = mongoose.model('requests', requestSchema);
