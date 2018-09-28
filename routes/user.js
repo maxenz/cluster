@@ -6,6 +6,7 @@ const jwt = require('jsonwebtoken');
 const passport = require('passport');
 const validateRegisterInput = require('../validation/register');
 const validateLoginInput = require('../validation/login');
+const mailer = require('../mailer/mailer');
 
 const User = require('../models/User');
 
@@ -88,6 +89,7 @@ router.post('/login', (req, res) => {
             }, (err, token) => {
               if(err) console.error('There is some error in token', err);
               else {
+                mailer.sendEmail();
                 res.json({
                   success: true,
                   token: `Bearer ${token}`
