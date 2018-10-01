@@ -89,7 +89,7 @@ router.post('/login', (req, res) => {
             }, (err, token) => {
               if(err) console.error('There is some error in token', err);
               else {
-                mailer.sendEmail();
+                // mailer.sendEmail();
                 res.json({
                   success: true,
                   token: `Bearer ${token}`

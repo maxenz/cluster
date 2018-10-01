@@ -1,16 +1,20 @@
 const MY_TEMPLATE_ID = 'd-3a68c594d94c47fca1f692c13c4ba302';
 
-let sendgrid = require('sendgrid')(process.env.SENDGRID_API_KEY);
-
 exports.sendEmail = () => {
-  const email = new sendgrid.Email({
-    from: 'max.poggio@melon.tech',
+// using SendGrid's v3 Node.js Library
+// https://github.com/sendgrid/sendgrid-nodejs
+  const sgMail = require('@sendgrid/mail');
+  sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+  const msg = {
     to: 'maximilianopoggio@gmail.com',
+    from: 'max.poggio@melon.tech',
+    subject: 'Sending with SendGrid is Fun',
     html: '<p></p>',
-    subject: 'Testing this!'
-  });
-
-  console.log('paso');
+    templateId: MY_TEMPLATE_ID,
+  };
+  // sgMail.addFilter('templates', 'enable', 1);
+  // sgMail.addFilter('templates', 'template_id', MY_TEMPLATE_ID);
+  sgMail.send(msg);
 
   // const host = 'https://mydomain.com'
   // const resetToken = 'sdfdsf-wer234w-csdfrfq3r-sdcs'
@@ -18,15 +22,4 @@ exports.sendEmail = () => {
   // email.addSubstitution('%name%', 'John')
   // email.addSubstitution('%reset_url%', `${host}/reset_password?token=${resetToken}`)
 
-  email.addFilter('templates', 'enable', 1);
-  email.addFilter('templates', 'template_id', MY_TEMPLATE_ID);
-
-  sendgrid.send(email, (err, response) => {
-    console.log('se mando');
-    if (err) {
-      console.log(err)
-    } else {
-      console.log('Yay! Our templated email has been sent')
-    }
-  })
 };
