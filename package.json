@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "test": "node test.js"
+    "test": "node test.js",
+    "heroku-postbuild": "cd client && yarn && yarn run build"
   },
   "author": "Maximiliano Poggio",
   "license": "ISC",
