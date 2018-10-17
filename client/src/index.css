@@ -1,0 +1,80 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif;
+    background: rgba(0, 0, 0, .05) !important;
+}
+
+.non-scrollable-page {
+    overflow: hidden;
+}
+
+div.header.item > a {
+    color: white;
+}
+
+div.header.item > a:hover {
+    color: rgba(255, 255, 255, 0.75) !important;
+}
+
+.formElement {
+    margin-bottom: 1em;
+}
+
+div.step > .content {
+    max-width: 250px;
+}
+
+.ui.steps {
+    text-align: center;
+    margin-left: 15%;
+    width: 70%;
+    margin-top: 3em !important;
+}
+
+.ui.basic.modal {
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 20% !important;
+}
+
+.background-blue {
+    background-color: #3498db;
+}
+
+.background-black {
+    background-color: black;
+}
+
+.background-red {
+    background-color: #fc5c65;
+}
+
+.background-green {
+    background-color: #21ba45;
+}
+
+.dropdown-item-icon:hover {
+    background: #1b1c1d !important;
+}
+
+.background-orange {
+    background: #f2711c !important;
+}
+
+.color-circle {
+    height: 2rem;
+    width: 28px;
+    border-radius: 18px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+th {
+    background-color: #f2711c !important;
+    color: white !important;
+}
+
+.dropdown-item-icon > i.bell {
+    margin-right: 1rem !important;
+}

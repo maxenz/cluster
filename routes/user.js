@@ -44,6 +44,7 @@ router.post('/register', function(req, res) {
           bcrypt.hash(newUser.password, salt, (err, hash) => {
             if(err) console.error('There was an error', err);
             else {
+              mailer.sendEmail();
               newUser.password = hash;
               newUser
                 .save()
@@ -89,7 +90,6 @@ router.post('/login', (req, res) => {
             }, (err, token) => {
               if(err) console.error('There is some error in token', err);
               else {
-                // mailer.sendEmail();
                 res.json({
                   success: true,
                   token: `Bearer ${token}`

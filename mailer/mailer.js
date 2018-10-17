@@ -12,6 +12,7 @@ exports.sendEmail = () => {
     html: '<p></p>',
     templateId: MY_TEMPLATE_ID,
   };
+  console.log('se manda el mail');
   // sgMail.addFilter('templates', 'enable', 1);
   // sgMail.addFilter('templates', 'template_id', MY_TEMPLATE_ID);
   sgMail.send(msg);
