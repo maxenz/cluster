@@ -6,6 +6,7 @@ const users = require('./routes/user');
 const passport = require('passport');
 const apiRoutes = require('./routes/api-routes');
 const cors = require('cors');
+const path = require('path');
 
 mongoose.connect(config.DB, { useNewUrlParser: true}).then(
   () => console.log('Database is connected'),
