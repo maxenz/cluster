@@ -19,40 +19,45 @@ exports.Generate = function (req, res) {
                         message: err.message
                     });
                 }
-
-                var preference = {
-                    payer: { email: req.body.email },
-                    auto_return : 'all',
-                    external_reference: request.id,
-                    items: [
-                        item = {
-                            title: 'Cluster3D - Impresi�n (' + req.body.request_id + ')',
-                            quantity: 1,
-                            currency_id: 'ARS',
-                            unit_price: parseFloat(request.price.amount)
+                if(request != null){
+                    var preference = {
+                        payer: { email: req.body.email },
+                        auto_return : 'all',
+                        external_reference: request.id,
+                        items: [
+                            item = {
+                                title: 'Cluster3D - Impresi�n (' + req.body.request_id + ')',
+                                quantity: 1,
+                                currency_id: 'ARS',
+                                unit_price: parseFloat(request.price.amount)
+                            }
+                        ],
+                        back_urls : {
+                            success: req.body.backUrl,
+                            failure: req.body.backUrl,
+                            pending: req.body.backUrl
                         }
-                    ],
-                    back_urls : {
-                        success: req.body.backUrl,
-                        failure: req.body.backUrl,
-                        pending: req.body.backUrl
-                    }
-                };
+                    };
 
-                MP.preferences.create(preference)
-                .then(function (preference) {
-                            res.json({
-                                status: "success",
-                                message: "Payment generated successfully",
-                                data: preference.response.sandbox_init_point
-                            });
-                }).catch(function (error) {
+                    MP.preferences.create(preference)
+                    .then(function (preference) {
+                                res.json({
+                                    status: "success",
+                                    message: "Payment generated successfully",
+                                    data: preference.response.sandbox_init_point
+                                });
+                    }).catch(function (error) {
+                        res.json({
+                            status: "error",
+                            message: error.message
+                        });
+                    });
+                }else{
                     res.json({
                         status: "error",
-                        message: error.message
+                        message: "Request not found"
                     });
-                });
-
+                }
             }, req.body.request_id);        
     }else{
         res.json({
@@ -73,47 +78,55 @@ exports.BackResponse = function(req, res){
                         message: err.message
                     });
                 }
-                if(request.payment_id == null){
-                    let payment = new Payment();
-                    payment.request_id = request.id;
-                    payment.amount = request.price;
-                    payment.state = req.query.collection_status;
-                    if(req.query.collection_status == 'approved'){
-                        payment.operation_number = req.query.collection_id;
-                        payment.payment_method = req.query.payment_type;
-                    }
-                    payment.modify_date = Date.now();
-
-                    payment.save(function (err) {
-                        if (err) {
-                            res.json({
-                                status: "error",
-                                message: err.message
-                            });
+                if(request != null){
+                    if(request.payment_id == null){
+                        let payment = new Payment();
+                        payment.request_id = request.id;
+                        payment.amount = request.price;
+                        payment.state = req.query.collection_status;
+                        if(req.query.collection_status == 'approved'){
+                            payment.operation_number = req.query.collection_id;
+                            payment.payment_method = req.query.payment_type;
                         }
+                        payment.modify_date = Date.now();
 
-                        request.payment_id = payment;
-                        request.save(function (err) {
+                        payment.save(function (err) {
                             if (err) {
                                 res.json({
                                     status: "error",
                                     message: err.message
-                                });                        
+                                });
                             }
 
-                            res.json({
-                                status: "success",
-                                message: "Payment registered successfully",
-                                data: payment
+                            request.payment_id = payment;
+                            request.save(function (err) {
+                                if (err) {
+                                    res.json({
+                                        status: "error",
+                                        message: err.message
+                                    });                        
+                                }
+
+                                res.json({
+                                    status: "success",
+                                    message: "Payment registered successfully",
+                                    data: payment
+                                });
                             });
                         });
-                    });
+                    }else{
+                        res.json({
+                            status: "error",
+                            message: "Payment was already registered",
+                            data: null
+                        });
+                    }
                 }else{
-                    res.json({
-                        status: "error",
-                        message: "Payment was already registered",
-                        data: null
-                    });
+                res.json({
+                    status: "error",
+                    message: "Request not found",
+                    data: null
+                });
                 }
             },req.query.external_reference);
         }else{
@@ -163,19 +176,37 @@ exports.Notifiy = function(req, res){
 }
 
 function processMerchantOrder(res, merchantOrderId){
-    if(merchantOrderId != null)
-        {
-            MP.get('/merchant_orders/' + merchantOrderId).then(function(merchantOrder){
-                if(merchantOrder != null && merchantOrder.status == 200 && merchantOrder.response.payments.length > 0){
-                    Payment.getByExternalReference(function (err, payment) {
+    
+    MP.get('/merchant_orders/' + merchantOrderId).then(function(merchantOrder){
+        if(merchantOrder != null && merchantOrder.status == 200 && merchantOrder.response.payments.length > 0){
+            Payment.getByExternalReference(function (err, payment) {
+                if (err) {
+                    res.json({
+                        status: "error",
+                        message: err.message
+                    });
+                }  
+                if(payment == null){
+                    Request.getById(function (err, request) {
                         if (err) {
                             res.json({
                                 status: "error",
                                 message: err.message
                             });
-                        }  
-                        if(payment == null){
-                            Request.getById(function (err, request) {
+                        }
+                        
+                        if(request != null){
+                            let payment = new Payment();
+                            payment.request_id = request.id;
+                            payment.amount = request.price;
+                            payment.state = merchantOrder.response.payments[0].status;
+                            if(req.query.collection_status == 'approved'){
+                                payment.operation_number = merchantOrder.response.collector.id;
+                                payment.payment_method = merchantOrder.response.payments[0].payment_type;
+                            }
+                            payment.modify_date = Date.now();
+
+                            payment.save(function (err) {
                                 if (err) {
                                     res.json({
                                         status: "error",
@@ -183,72 +214,66 @@ function processMerchantOrder(res, merchantOrderId){
                                     });
                                 }
 
-                                let payment = new Payment();
-                                payment.request_id = request.id;
-                                payment.amount = request.price;
-                                payment.state = merchantOrder.response.payments[0].status;
-                                if(req.query.collection_status == 'approved'){
-                                    payment.operation_number = merchantOrder.response.collector.id;
-                                    payment.payment_method = merchantOrder.response.payments[0].payment_type;
-                                }
-                                payment.modify_date = Date.now();
-
-                                payment.save(function (err) {
+                                request.payment_id = payment;
+                                request.save(function (err) {
                                     if (err) {
                                         res.json({
                                             status: "error",
                                             message: err.message
-                                        });
+                                        });                        
                                     }
 
-                                    request.payment_id = payment;
-                                    request.save(function (err) {
-                                        if (err) {
-                                            res.json({
-                                                status: "error",
-                                                message: err.message
-                                            });                        
-                                        }
-
-                                        res.json({
-                                            status: "success",
-                                            message: "Payment registered successfully",
-                                            data: payment
-                                        });
-                                    });
-                                });
-                            }, merchantOrder.response.external_reference);
-                        }else{                   
-                            if(payment.state != 'approved'){    
-                                payment.state = merchantOrder.response.payments[0].status;
-                                if(merchantOrder.response.payments[0].status == 'approved'){
-                                    payment.operation_number = merchantOrder.response.collector.id;
-                                    payment.payment_method = merchantOrder.response.payments[0].payment_type;
-                                }
-                                payment.modify_date = Date.now;
-
-                                payment.save(function () {
                                     res.json({
                                         status: "success",
-                                        message: (payment.state == 'approved') ? "Payment approved successfully" : "Payment notified successfully",
+                                        message: "Payment registered successfully.",
                                         data: payment
                                     });
                                 });
-                            }else{
-                                res.json({
-                                    status: "error",
-                                    message: "Payment was already approved.",
-                                    data: payment
-                                });
-                            }
+                            });
+                        }else{
+                            res.json({
+                                status: "error",
+                                message: "Request not found",
+                                data: null
+                            });
                         }
-                    },merchantOrder.response.external_reference);        
+                    }, merchantOrder.response.external_reference);
+                }else{                   
+                    if(payment.state != 'approved'){    
+                        payment.state = merchantOrder.response.payments[0].status;
+                        if(merchantOrder.response.payments[0].status == 'approved'){
+                            payment.operation_number = merchantOrder.response.collector.id;
+                            payment.payment_method = merchantOrder.response.payments[0].payment_type;
+                        }
+                        payment.modify_date = Date.now;
+
+                        payment.save(function () {
+                            res.json({
+                                status: "success",
+                                message: (payment.state == 'approved') ? "Payment approved successfully." : "Payment notified successfully.",
+                                data: payment
+                            });
+                        });
+                    }else{
+                        res.json({
+                            status: "error",
+                            message: "Payment was already approved.",
+                            data: payment
+                        });
+                    }
                 }
-            }).catch(function (error) {
-                res.json({
-                    status: "error",
-                    message: error.message
-                });
+            },merchantOrder.response.external_reference);        
+        }else{
+            res.json({
+                status: "error",
+                message: "Merchant order not found or has empty payments.",
+                data: payment
             });
         }
+    }).catch(function (error) {
+        res.json({
+            status: "error",
+            message: error.message
+        });
+    });        
 }
