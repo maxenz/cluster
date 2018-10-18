@@ -11,6 +11,7 @@ MP.configure({
 });
 
 exports.Generate = function (req, res) {
+    if(req.body.email != null && req.body.request_id != null && req.body.backUrl != null){
             Request.getById(function (err, request) {
                 if (err) {
                     res.json({
@@ -53,61 +54,74 @@ exports.Generate = function (req, res) {
                 });
 
             }, req.body.request_id);        
+    }else{
+        res.json({
+            status: "error",
+            message: "Wrong parameters"
+        });
+    } 
 }
 
 exports.BackResponse = function(req, res){
     try
     {
-        Request.getById(function (err, request) {
-            if (err) {
-                res.json({
-                    status: "error",
-                    message: err.message
-                });
-            }
-            if(request.payment_id == null){
-                let payment = new Payment();
-                payment.request_id = request.id;
-                payment.amount = request.price;
-                payment.state = req.query.collection_status;
-                if(req.query.collection_status == 'approved'){
-                    payment.operation_number = req.query.collection_id;
-                    payment.payment_method = req.query.payment_type;
+        if(req.query.collection_status != null && req.query.collection_id != null && req.query.payment_type != null && req.query.external_reference != null){
+            Request.getById(function (err, request) {
+                if (err) {
+                    res.json({
+                        status: "error",
+                        message: err.message
+                    });
                 }
-                payment.modify_date = Date.now();
-
-                payment.save(function (err) {
-                    if (err) {
-                        res.json({
-                            status: "error",
-                            message: err.message
-                        });
+                if(request.payment_id == null){
+                    let payment = new Payment();
+                    payment.request_id = request.id;
+                    payment.amount = request.price;
+                    payment.state = req.query.collection_status;
+                    if(req.query.collection_status == 'approved'){
+                        payment.operation_number = req.query.collection_id;
+                        payment.payment_method = req.query.payment_type;
                     }
+                    payment.modify_date = Date.now();
 
-                    request.payment_id = payment;
-                    request.save(function (err) {
+                    payment.save(function (err) {
                         if (err) {
                             res.json({
                                 status: "error",
                                 message: err.message
-                            });                        
+                            });
                         }
 
-                        res.json({
-                            status: "success",
-                            message: "Payment registered successfully",
-                            data: payment
+                        request.payment_id = payment;
+                        request.save(function (err) {
+                            if (err) {
+                                res.json({
+                                    status: "error",
+                                    message: err.message
+                                });                        
+                            }
+
+                            res.json({
+                                status: "success",
+                                message: "Payment registered successfully",
+                                data: payment
+                            });
                         });
                     });
-                });
-            }else{
-                res.json({
-                    status: "error",
-                    message: "Payment was already registered",
-                    data: null
-                });
-            }
-        },req.query.external_reference);
+                }else{
+                    res.json({
+                        status: "error",
+                        message: "Payment was already registered",
+                        data: null
+                    });
+                }
+            },req.query.external_reference);
+        }else{
+            res.json({
+                status: "error",
+                message: "Wrong parameters"
+            });
+        } 
     }catch(error) {
         res.json({
             status: "error",
@@ -118,20 +132,27 @@ exports.BackResponse = function(req, res){
 exports.Notifiy = function(req, res){
     try
     {
-        var merchantOrderId = req.body.id;
-        if(req.body.topic == 'payment'){
-            MP.getPayment(req.body.id).then(function(payment){
-            if(payment.status == 200 && payment.response.order != null)
-                merchantOrderId = payment.response.order.id;
-                processMerchantOrder(res, req.body.id, merchantOrderId);
-            }).catch(function (error) {
-                res.json({
-                    status: "error",
-                    message: error.message
+        if(req.body.id != null && req.body.topic != null ){
+            var merchantOrderId = req.body.id;
+            if(req.body.topic == 'payment'){
+                MP.getPayment(req.body.id).then(function(payment){
+                if(payment.status == 200 && payment.response.order != null)
+                    merchantOrderId = payment.response.order.id;
+                    processMerchantOrder(res, req.body.id, merchantOrderId);
+                }).catch(function (error) {
+                    res.json({
+                        status: "error",
+                        message: error.message
+                    });
                 });
-            });
+            }else{
+                processMerchantOrder(res, merchantOrderId);
+            }
         }else{
-            processMerchantOrder(res, merchantOrderId);
+            res.json({
+                status: "error",
+                message: "Wrong parameters"
+            });
         }        
     }catch(error) {
         res.json({
