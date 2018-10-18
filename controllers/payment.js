@@ -65,41 +65,48 @@ exports.BackResponse = function(req, res){
                     message: err.message
                 });
             }
-            
-            let payment = new Payment();
-            payment.request_id = request.id;
-            payment.amount = request.price;
-            payment.state = req.query.collection_status;
-            if(req.query.collection_status == 'approved'){
-                payment.operation_number = req.query.collection_id;
-                payment.payment_method = req.query.payment_type;
-            }
-            payment.modify_date = Date.now();
-
-            payment.save(function (err) {
-                if (err) {
-                    res.json({
-                        status: "error",
-                        message: err.message
-                    });
+            if(request.payment_id == null){
+                let payment = new Payment();
+                payment.request_id = request.id;
+                payment.amount = request.price;
+                payment.state = req.query.collection_status;
+                if(req.query.collection_status == 'approved'){
+                    payment.operation_number = req.query.collection_id;
+                    payment.payment_method = req.query.payment_type;
                 }
+                payment.modify_date = Date.now();
 
-                request.payment_id = payment;
-                request.save(function (err) {
+                payment.save(function (err) {
                     if (err) {
                         res.json({
                             status: "error",
                             message: err.message
-                        });                        
+                        });
                     }
 
-                    res.json({
-                        status: "success",
-                        message: "Payment registered successfully",
-                        data: payment
+                    request.payment_id = payment;
+                    request.save(function (err) {
+                        if (err) {
+                            res.json({
+                                status: "error",
+                                message: err.message
+                            });                        
+                        }
+
+                        res.json({
+                            status: "success",
+                            message: "Payment registered successfully",
+                            data: payment
+                        });
                     });
                 });
-            });
+            }else{
+                res.json({
+                    status: "error",
+                    message: "Payment was already registered",
+                    data: null
+                });
+            }
         },req.query.external_reference);
     }catch(error) {
         res.json({
@@ -116,7 +123,7 @@ exports.Notifiy = function(req, res){
             MP.getPayment(req.body.id).then(function(payment){
             if(payment.status == 200 && payment.response.order != null)
                 merchantOrderId = payment.response.order.id;
-                processMerchantOrder(res, merchantOrderId);
+                processMerchantOrder(res, req.body.id, merchantOrderId);
             }).catch(function (error) {
                 res.json({
                     status: "error",
@@ -139,28 +146,81 @@ function processMerchantOrder(res, merchantOrderId){
         {
             MP.get('/merchant_orders/' + merchantOrderId).then(function(merchantOrder){
                 if(merchantOrder != null && merchantOrder.status == 200 && merchantOrder.response.payments.length > 0){
-                    let payment = Payment.getByExternalReference(function (err, request) {
+                    Payment.getByExternalReference(function (err, payment) {
                         if (err) {
                             res.json({
                                 status: "error",
                                 message: err.message
                             });
-                        }
-                    
-                        payment.state = merchantOrder.response.payments[0].status;
-                        if(merchantOrder.response.payments[0].status == 'approved'){
-                            payment.operation_number = merchantOrder.response.collector.id;
-                            payment.payment_method = merchantOrder.response.payments[0].payment_type;
-                        }
-                        payment.modify_date = Date.now;
+                        }  
+                        if(payment == null){
+                            Request.getById(function (err, request) {
+                                if (err) {
+                                    res.json({
+                                        status: "error",
+                                        message: err.message
+                                    });
+                                }
 
-                        payment.save(function () {
-                            res.json({
-                                status: "success",
-                                message: "Payment registered successfully",
-                                data: payment
-                            });
-                        });
+                                let payment = new Payment();
+                                payment.request_id = request.id;
+                                payment.amount = request.price;
+                                payment.state = merchantOrder.response.payments[0].status;
+                                if(req.query.collection_status == 'approved'){
+                                    payment.operation_number = merchantOrder.response.collector.id;
+                                    payment.payment_method = merchantOrder.response.payments[0].payment_type;
+                                }
+                                payment.modify_date = Date.now();
+
+                                payment.save(function (err) {
+                                    if (err) {
+                                        res.json({
+                                            status: "error",
+                                            message: err.message
+                                        });
+                                    }
+
+                                    request.payment_id = payment;
+                                    request.save(function (err) {
+                                        if (err) {
+                                            res.json({
+                                                status: "error",
+                                                message: err.message
+                                            });                        
+                                        }
+
+                                        res.json({
+                                            status: "success",
+                                            message: "Payment registered successfully",
+                                            data: payment
+                                        });
+                                    });
+                                });
+                            }, merchantOrder.response.external_reference);
+                        }else{                   
+                            if(payment.state != 'approved'){    
+                                payment.state = merchantOrder.response.payments[0].status;
+                                if(merchantOrder.response.payments[0].status == 'approved'){
+                                    payment.operation_number = merchantOrder.response.collector.id;
+                                    payment.payment_method = merchantOrder.response.payments[0].payment_type;
+                                }
+                                payment.modify_date = Date.now;
+
+                                payment.save(function () {
+                                    res.json({
+                                        status: "success",
+                                        message: (payment.state == 'approved') ? "Payment approved successfully" : "Payment notified successfully",
+                                        data: payment
+                                    });
+                                });
+                            }else{
+                                res.json({
+                                    status: "error",
+                                    message: "Payment was already approved.",
+                                    data: payment
+                                });
+                            }
+                        }
                     },merchantOrder.response.external_reference);        
                 }
             }).catch(function (error) {
