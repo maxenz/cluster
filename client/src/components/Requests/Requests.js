@@ -55,6 +55,7 @@ export class Requests extends React.Component {
       }
     };
     this.state = this._initState;
+    this.savePrinter = this.props.savePrinter.bind(this);
   }
 
   cleanState = () => {
@@ -136,8 +137,9 @@ export class Requests extends React.Component {
       ...request,
       status: REQUESTS_STATUS_READY_TO_DELIVER,
     }).then(() => {
+      console.log(this.props.printers[request.selected_printer_id]);
       this.props.savePrinter({
-        ...this.printers[request.selected_printer_id],
+        ...this.props.printers[request.selected_printer_id],
         status: PRINTER_STATUS_ENABLED
       });
     });
@@ -148,6 +150,7 @@ export class Requests extends React.Component {
     this.props.saveRequest({
       ...request,
       status: REQUESTS_STATUS_PRINTING,
+      selected_printer_id: this.state.request.selected_printer_id,
       start_printing_time: new Date(),
       finish_printing_time: moment()
           .add(this.state.request.total_printing_time, 'minutes')
@@ -168,6 +171,7 @@ export class Requests extends React.Component {
   };
 
   render() {
+    console.log(this.props.printers);
     const {showRequestsTable, showQuoteForm, showPrintingForm, showCreateEditForm, request} = this.state;
     const {requests, auth} = this.props;
 

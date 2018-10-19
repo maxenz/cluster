@@ -14,7 +14,7 @@ export const savePrinter = printer => dispatch => {
       .catch(err => {
         dispatch({
           type: types.GET_ERRORS,
-          payload: err.response.data
+          payload: err,
         });
       });
 };
@@ -30,7 +30,7 @@ export const getPrinters = () => dispatch => {
       .catch(err => {
         dispatch({
           type: types.GET_ERRORS,
-          payload: err.response.data
+          payload: err,
         });
       });
 };

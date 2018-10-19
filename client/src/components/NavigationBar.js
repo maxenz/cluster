@@ -72,12 +72,19 @@ class NavigationBar extends Component {
     const {isAuthenticated, user} = this.props.auth;
     const authLinks = (
         <React.Fragment>
-          <Menu.Item header>
-            <Link style={{color: this.getLinkColor('/dashboard')}} to="/dashboard">Panel</Link>
-          </Menu.Item>
-          <Menu.Item header>
-            <Link style={{color: this.getLinkColor('/printers')}} to="/printers">Impresoras</Link>
-          </Menu.Item>
+          {
+            isAuthenticated && user.admin &&
+            <Menu.Item header>
+              <Link style={{color: this.getLinkColor('/dashboard')}} to="/dashboard">Panel</Link>
+            </Menu.Item>
+          }
+          {
+            isAuthenticated && user.admin &&
+            <Menu.Item header>
+              <Link style={{color: this.getLinkColor('/printers')}}
+                    to="/printers">Impresoras</Link>
+            </Menu.Item>
+          }
           <Menu.Item header>
             <Link style={{color: this.getLinkColor('/requests')}} to="/requests">Pedidos</Link>
           </Menu.Item>

@@ -74,6 +74,12 @@ export class Dashboard extends React.Component {
     return [abs, flex, pla];
   };
 
+  componentWillMount() {
+    if (!this.props.isAuthenticated || (this.props.isAuthenticated && !this.props.auth.user.admin)) {
+      this.props.history.push('/login');
+    }
+  }
+
   render() {
     const {requests, printers} = this.props;
     return (
@@ -100,6 +106,7 @@ export class Dashboard extends React.Component {
 const mapStateToProps = state => ({
   printers: state.printers.all,
   requests: state.requests.all,
+  isAuthenticated: state.auth.isAuthenticated,
   auth: state.auth,
 });
 

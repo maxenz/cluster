@@ -19,7 +19,7 @@ const PrintRequestForm = (props) => {
       });
 
   return (
-      <div style={{marginTop: '5%'}}>
+      <div style={{marginTop: '8%'}}>
         <BackButton handleGoBack={props.handleGoBack}/>
         <Form error size='large' onSubmit={() => updateRequest(request._id)}
               style={{width: '50%', marginLeft: 'auto', marginRight: 'auto'}}>

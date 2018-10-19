@@ -44,12 +44,15 @@ router.post('/register', function(req, res) {
           bcrypt.hash(newUser.password, salt, (err, hash) => {
             if(err) console.error('There was an error', err);
             else {
-              mailer.sendEmail();
               newUser.password = hash;
               newUser
                 .save()
                 .then(user => {
-                  res.json(user)
+                  mailer.sendEmail(user).then(() => {
+                    res.json(user);
+                  }, (error) => {
+                    console.log(error.response.body);
+                  });
                 });
             }
           });

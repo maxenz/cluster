@@ -12,8 +12,10 @@ import PrintersTable from "./PrintersTable";
 import PrinterForm from "./PrinterForm";
 import {PRINTER_STATUS_ENABLED} from "../../constants/printers";
 import {getPrinters, savePrinter, removePrinter} from "../../actions/printers";
+import {getRequests} from "../../actions/requests";
 import PrinterImage from '../../images/printer.png';
 import Loader from '../Loader';
+import PropTypes from "prop-types";
 
 const source = [];
 
@@ -26,6 +28,10 @@ const styles = {
 };
 
 class Printers extends React.Component {
+
+  static contextTypes = {
+    router: PropTypes.object
+  };
 
   constructor(props) {
     super(props);
@@ -116,10 +122,11 @@ class Printers extends React.Component {
 
   componentDidMount() {
     this.props.getPrinters();
+    this.props.getRequests();
   }
 
   componentWillMount() {
-    if (!this.props.isAuthenticated) {
+    if (!this.props.isAuthenticated || (this.props.isAuthenticated && !this.props.auth.user.admin)) {
       this.props.history.push('/login');
     }
   }
@@ -186,12 +193,15 @@ class Printers extends React.Component {
 const mapStateToProps = state => ({
   printers: state.printers.all,
   isAuthenticated: state.auth.isAuthenticated,
+  requests: state.requests.all,
+  auth: state.auth,
 });
 
 const mapDispatchToProps = {
   getPrinters,
   savePrinter,
   removePrinter,
+  getRequests,
 };
 
 Printers.defaultProps = {};
