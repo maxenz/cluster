@@ -21,6 +21,7 @@
     "jsonwebtoken": "^8.3.0",
     "lodash": "^4.17.11",
     "mercadopago": "^1.0.19",
+    "moment": "^2.22.2",
     "mongoose": "^5.2.9",
     "mongoose-money": "^0.2.0",
     "passport": "^0.4.0",

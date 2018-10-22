@@ -48,7 +48,7 @@ router.post('/register', function(req, res) {
               newUser
                 .save()
                 .then(user => {
-                  mailer.sendEmail(user).then(() => {
+                  mailer.sendRegisterEmail(user).then(() => {
                     res.json(user);
                   }, (error) => {
                     console.log(error.response.body);

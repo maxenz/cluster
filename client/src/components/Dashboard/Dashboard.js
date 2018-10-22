@@ -51,7 +51,7 @@ export class Dashboard extends React.Component {
           r => r.selected_printer_id === printer._id &&
               (r.status === REQUESTS_STATUS_READY_TO_DELIVER || r.status === REQUESTS_STATUS_DONE))
           .length;
-      const actualRequest = requests.filter(r => r.status === REQUESTS_STATUS_PRINTING && r.selectedPrinterId === printer._id);
+      const actualRequest = requests.filter(r => r.status === REQUESTS_STATUS_PRINTING && r.selected_printer_id === printer._id);
       const pendingMinutes = actualRequest.length > 0 ? moment(actualRequest[0].finish_printing_time).diff(moment(), 'minutes', true) : 0;
       const info = {
         pendingMinutes,

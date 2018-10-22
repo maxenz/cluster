@@ -1,6 +1,9 @@
 Request = require('../models/request');
+User = require('../models/User');
 require('mongoose-money');
+const mailer = require('../mailer/mailer');
 const Money = require('moneyjs');
+const REQUESTS_STATUS_QUOTED_BY_ADMIN = 2;
 
 exports.index = function (req, res) {
   Request.get(function (err, requests) {
@@ -26,6 +29,7 @@ exports.new = function (req, res) {
   request.status = req.body.status;
   request.created_time = req.body.created_time;
   request.file_name = req.body.file_name;
+  request.created_by = req.body.created_by;
 
   request.save(function (err) {
     if (err) {
@@ -46,9 +50,18 @@ exports.update = (req, res) => {
     if (err) {
       res.json(err);
     }
-    res.json({
-      message: 'Updated request is',
-      data: doc
-    });
+
+    if (req.body.status === REQUESTS_STATUS_QUOTED_BY_ADMIN) {
+      User.findOne({_id: req.body.created_by})
+          .then(user => {
+            const quotation = {...req.body, user};
+            mailer.sendQuotationEmail(quotation);
+            res.json({
+              message: 'Updated request is',
+              data: doc
+            });
+          });
+    }
+
   })
 };

@@ -105,10 +105,13 @@ export class Requests extends React.Component {
 
   handleRejectQuote = (id) => {
     const request = this.props.requests[id];
-    this.props.saveRequest({
+    const updatedRequest = {
       ...request, status:
       REQUESTS_STATUS_QUOTE_REJECTED,
-    });
+    };
+    this.props.saveRequest(updatedRequest).then(() => {
+      this.setState({...this.state, request: updatedRequest});
+    })
   };
 
   handleSaveQuoteRequest = () => {
@@ -137,7 +140,6 @@ export class Requests extends React.Component {
       ...request,
       status: REQUESTS_STATUS_READY_TO_DELIVER,
     }).then(() => {
-      console.log(this.props.printers[request.selected_printer_id]);
       this.props.savePrinter({
         ...this.props.printers[request.selected_printer_id],
         status: PRINTER_STATUS_ENABLED
@@ -171,7 +173,6 @@ export class Requests extends React.Component {
   };
 
   render() {
-    console.log(this.props.printers);
     const {showRequestsTable, showQuoteForm, showPrintingForm, showCreateEditForm, request} = this.state;
     const {requests, auth} = this.props;
 

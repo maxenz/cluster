@@ -75,7 +75,8 @@ class NavigationBar extends Component {
           {
             isAuthenticated && user.admin &&
             <Menu.Item header>
-              <Link style={{color: this.getLinkColor('/dashboard')}} to="/dashboard">Panel</Link>
+              <Link style={{color: this.getLinkColor('/dashboard')}}
+                    to="/dashboard">Panel</Link>
             </Menu.Item>
           }
           {
@@ -86,28 +87,33 @@ class NavigationBar extends Component {
             </Menu.Item>
           }
           <Menu.Item header>
-            <Link style={{color: this.getLinkColor('/requests')}} to="/requests">Pedidos</Link>
+            <Link style={{color: this.getLinkColor('/requests')}}
+                  to="/requests">Pedidos</Link>
           </Menu.Item>
-          <Menu.Item position='right'>
-            <Dropdown className='dropdown-item-icon' item
-                      icon={<Icon name='bell outline'/>}>
-              <Dropdown.Menu>
-                <Dropdown.Item style={{width: '200px'}}>
-                  Pedidos a cotizar
-                  <Label color='orange'
-                         style={style.label}>{this.getRequestsToQuote()}</Label>
-                </Dropdown.Item>
-                <Dropdown.Item>
-                  Pedidos a imprimir
-                  <Label color='orange'
-                         style={style.label}>{this.getRequestsToPrint()}</Label>
-                </Dropdown.Item>
-              </Dropdown.Menu>
-            </Dropdown>
-            <ul className="navbar-nav ml-auto">
-              <DropdownImage name={user.name} image={user.avatar}/>
-            </ul>
-          </Menu.Item>
+          {
+            isAuthenticated && user.admin &&
+            <Menu.Item position='right'>
+              <Dropdown className='dropdown-item-icon' item
+                        icon={<Icon name='bell outline'/>}>
+                <Dropdown.Menu>
+                  <Dropdown.Item style={{width: '200px'}}>
+                    Pedidos a cotizar
+                    <Label color='orange'
+                           style={style.label}>{this.getRequestsToQuote()}</Label>
+                  </Dropdown.Item>
+                  <Dropdown.Item>
+                    Pedidos a imprimir
+                    <Label color='orange'
+                           style={style.label}>{this.getRequestsToPrint()}</Label>
+                  </Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
+              <ul className="navbar-nav ml-auto">
+                <DropdownImage name={user.name} image={user.avatar}/>
+              </ul>
+            </Menu.Item>
+          }
+
         </React.Fragment>
     );
     const guestLinks = (
@@ -143,7 +149,15 @@ class NavigationBar extends Component {
 // route={routes.PRINTERS} name="Impresoras"/> : null} <HeaderLink
 // route={routes.REQUESTS} name="Pedidos"/> <HeaderLink
 // route={routes.PRINT_WIZARD} name="Imprimir"/> <Menu.Item position='right'>
-// {props.user.role && props.user.role === 'ADMIN' ? <Dropdown className='dropdown-item-icon' item icon={<Icon name='bell outline'/>}> <Dropdown.Menu> <Dropdown.Item style={{width: '200px'}}> Pedidos a cotizar <Label color='orange' style={style.label}>{requestsToQuote}</Label> </Dropdown.Item> <Dropdown.Item> Pedidos a imprimir <Label color='orange' style={style.label}>{requestsToPrint}</Label> </Dropdown.Item> </Dropdown.Menu> </Dropdown> : null } <HeaderLink route={routes.ACCOUNT} name={props.user.email}/> <SignOutButton signOutHandler={() => signOut(props.history)}/> </Menu.Item> </Container> </Menu>) };
+// {props.user.role && props.user.role === 'ADMIN' ? <Dropdown
+// className='dropdown-item-icon' item icon={<Icon name='bell outline'/>}>
+// <Dropdown.Menu> <Dropdown.Item style={{width: '200px'}}> Pedidos a cotizar
+// <Label color='orange' style={style.label}>{requestsToQuote}</Label>
+// </Dropdown.Item> <Dropdown.Item> Pedidos a imprimir <Label color='orange'
+// style={style.label}>{requestsToPrint}</Label> </Dropdown.Item>
+// </Dropdown.Menu> </Dropdown> : null } <HeaderLink route={routes.ACCOUNT}
+// name={props.user.email}/> <SignOutButton signOutHandler={() =>
+// signOut(props.history)}/> </Menu.Item> </Container> </Menu>) };
 
 NavigationBar.propTypes = {
   logoutUser: PropTypes.func.isRequired,

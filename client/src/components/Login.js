@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import {Link} from 'react-router-dom';
 import {connect} from 'react-redux';
 import {loginUser} from '../actions/authentication';
+import {withRouter} from 'react-router-dom';
 import {
   Header,
   Form,
@@ -63,7 +64,9 @@ class Login extends Component {
       email: this.state.email,
       password: this.state.password,
     };
-    this.props.loginUser(user);
+    this.props.loginUser(user).then(() => {
+      this.redirect();
+    })
   };
 
   componentWillMount() {
@@ -76,16 +79,22 @@ class Login extends Component {
     removeNonScrollableClassToBody();
   }
 
-  componentDidMount() {
+  redirect = () => {
     if (this.props.auth.isAuthenticated) {
-      this.props.history.push('/dashboard');
+      if (this.props.auth.user.admin) {
+        this.props.history.push('/dashboard');
+      }
+      else {
+        this.props.history.push('/requests');
+      }
     }
+  };
+
+  componentDidMount() {
+    this.redirect();
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.auth.isAuthenticated) {
-      this.props.history.push('/dashboard')
-    }
     if (nextProps.errors) {
       this.setState({
         errors: nextProps.errors
@@ -108,7 +117,8 @@ class Login extends Component {
         isLoading;
 
     return (
-        <Grid style={styles.container} verticalAlign='middle' columns={1} centered>
+        <Grid style={styles.container} verticalAlign='middle' columns={1}
+              centered>
           <Grid.Column style={styles.formContainer}>
             <Header as='h2' textAlign='center'>
               Inicio de sesión
@@ -175,4 +185,4 @@ const mapDispatchToProps = {
   loginUser,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Login)
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Login))

@@ -20,7 +20,7 @@ export default function (state = initialState, action) {
     case types.REQUEST_GET_SUCCESS:
       return {
         ...state,
-        all: arrayToObject(action.payload.data, '_id'),
+        all: arrayToObject(action.payload, '_id'),
       };
     case types.REQUEST_DELETE_SUCCESS:
       let key = action.payload.data._id;
