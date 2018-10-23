@@ -109,9 +109,7 @@ export class Requests extends React.Component {
       ...request, status:
       REQUESTS_STATUS_QUOTE_REJECTED,
     };
-    this.props.saveRequest(updatedRequest).then(() => {
-      this.setState({...this.state, request: updatedRequest});
-    })
+    this.props.saveRequest(updatedRequest);
   };
 
   handleSaveQuoteRequest = () => {
@@ -175,6 +173,8 @@ export class Requests extends React.Component {
   render() {
     const {showRequestsTable, showQuoteForm, showPrintingForm, showCreateEditForm, request} = this.state;
     const {requests, auth} = this.props;
+
+    console.log('render');
 
     return (
         <Loader

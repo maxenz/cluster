@@ -90,9 +90,10 @@ class NavigationBar extends Component {
             <Link style={{color: this.getLinkColor('/requests')}}
                   to="/requests">Pedidos</Link>
           </Menu.Item>
-          {
-            isAuthenticated && user.admin &&
-            <Menu.Item position='right'>
+          <Menu.Item position='right'>
+            {
+              isAuthenticated && user.admin &&
+
               <Dropdown className='dropdown-item-icon' item
                         icon={<Icon name='bell outline'/>}>
                 <Dropdown.Menu>
@@ -108,11 +109,11 @@ class NavigationBar extends Component {
                   </Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>
-              <ul className="navbar-nav ml-auto">
-                <DropdownImage name={user.name} image={user.avatar}/>
-              </ul>
-            </Menu.Item>
-          }
+            }
+            <ul className="navbar-nav ml-auto">
+              <DropdownImage name={user.name} image={user.avatar}/>
+            </ul>
+          </Menu.Item>
 
         </React.Fragment>
     );

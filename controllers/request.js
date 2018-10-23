@@ -55,12 +55,22 @@ exports.update = (req, res) => {
       User.findOne({_id: req.body.created_by})
           .then(user => {
             const quotation = {...req.body, user};
-            mailer.sendQuotationEmail(quotation);
-            res.json({
-              message: 'Updated request is',
-              data: doc
-            });
+            mailer.sendQuotationEmail(quotation)
+                .then(() => {
+                  res.json({
+                    message: 'Updated request is',
+                    data: doc
+                  });
+                }, (error) => {
+                  console.log(error);
+                })
           });
+    }
+    else {
+      res.json({
+        message: 'Updated request is',
+        data: doc
+      });
     }
 
   })

@@ -9,7 +9,7 @@ export const registerUser = (user, history) => dispatch => {
       .catch(err => {
         dispatch({
           type: GET_ERRORS,
-          payload: err.response.data
+          payload: err,
         });
       });
 };
@@ -27,7 +27,7 @@ export const loginUser = (user) => dispatch => {
       .catch(err => {
         dispatch({
           type: GET_ERRORS,
-          payload: err.response.data
+          payload: err,
         });
       });
 };
