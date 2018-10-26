@@ -6,6 +6,7 @@ const Money = require('moneyjs');
 const REQUESTS_STATUS_QUOTED_BY_ADMIN = 2;
 
 exports.index = function (req, res) {
+
   Request.get(function (err, requests) {
     if (err) {
       res.json({
@@ -62,7 +63,7 @@ exports.update = (req, res) => {
                     data: doc
                   });
                 }, (error) => {
-                  console.log(error);
+                  console.log(error.response.body);
                 })
           });
     }

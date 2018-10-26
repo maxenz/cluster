@@ -1,48 +1,51 @@
+var nodemailer = require('nodemailer');
+const Email = require('email-templates');
 const moment = require('moment');
 
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: 'maxenz@gmail.com',
+    pass: 'versacapo'
+  }
+});
+
+const email = new Email({
+  // preview: false,
+  send: true,
+  transport: transporter,
+});
+
 exports.sendRegisterEmail = (user) => {
-  const TEMPLATE_ID = 'd-3a68c594d94c47fca1f692c13c4ba302';
-  const sgMail = require('@sendgrid/mail');
-  sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-  const msg = {
-    to: user.email,
-    from: 'max.poggio@melon.tech',
-    subject: 'Bienvenida/o a Cluster3D!',
-    html: '<p></p>',
-    templateId: TEMPLATE_ID,
-    dynamic_template_data: {
-      name: user.name,
-    }
-  };
-
-  return sendEmail(msg);
-
+  return email
+      .send({
+        template: 'quotation',
+        subject: 'Bienvenida/o a Cluster3D!',
+        message: {
+          to: user.email,
+        },
+        locals: {
+          name: user.name,
+        }
+      })
+      .then(console.log)
+      .catch(console.error);
 };
 
 exports.sendQuotationEmail = (quotation) => {
-  const TEMPLATE_ID = 'd-1142757e34e747099ab518b859b65761';
-  const sgMail = require('@sendgrid/mail');
-  sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-  const msg = {
-    to: quotation.user.email,
-    from: 'max.poggio@melon.tech',
-    subject: 'Cluster3D - Confirmación de cotización',
-    html: '<p></p>',
-    templateId: TEMPLATE_ID,
-    dynamic_template_data: {
-      request_price: quotation.price,
-      create_date: moment(quotation.create_date).format('DD/MM/YYYY'),
-      request_id: quotation._id,
-    }
-  };
-
-  return sendEmail(msg);
-
-};
-
-const sendEmail = (msg) => {
-  const sgMail = require('@sendgrid/mail');
-  sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-
-  return sgMail.send(msg);
+  return email
+      .send({
+        template: 'quotation',
+        subject: 'Cluster3D - Confirmación de cotización',
+        message: {
+          to: quotation.user.email,
+        },
+        locals: {
+          request_price: quotation.price,
+          create_date: moment(quotation.create_date).format('DD/MM/YYYY'),
+          request_id: quotation._id,
+        }
+      })
+      .then(console.log)
+      .catch(console.error);
 };

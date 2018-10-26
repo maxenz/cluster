@@ -16,6 +16,8 @@
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.18.3",
     "cors": "^2.8.4",
+    "ejs": "^2.6.1",
+    "email-templates": "^5.0.2",
     "express": "^4.16.3",
     "gravatar": "^1.6.0",
     "jsonwebtoken": "^8.3.0",
@@ -24,8 +26,10 @@
     "moment": "^2.22.2",
     "mongoose": "^5.2.9",
     "mongoose-money": "^0.2.0",
+    "nodemailer": "^4.6.8",
     "passport": "^0.4.0",
     "passport-jwt": "^4.0.0",
+    "pug": "^2.0.3",
     "sendgrid": "^5.2.3",
     "validator": "^10.7.0"
   }
