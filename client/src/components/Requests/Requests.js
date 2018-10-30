@@ -11,13 +11,9 @@ import PrintRequestForm from './PrintRequestForm';
 import {
   REQUESTS_STATUS_PRINTING, REQUESTS_STATUS_QUOTE_ACCEPTED,
   REQUESTS_STATUS_QUOTE_REJECTED, REQUESTS_STATUS_QUOTED_BY_ADMIN,
-  REQUESTS_STATUS_READY_TO_DELIVER, REQUESTS_STATUS_READY_TO_PRINT
+  REQUESTS_STATUS_READY_TO_DELIVER
 } from
       "../../constants/requests";
-import queryString from 'query-string';
-// import {getFileUrl} from
-// "../../firebase/storage"; import PrintRequestForm from
-// '../requests/PrintRequestForm';
 import {
   PRINTER_STATUS_ENABLED,
   PRINTER_STATUS_WORKING
@@ -32,7 +28,6 @@ import {
 import {getPrinters, savePrinter} from "../../actions/printers";
 import CreateEditRequestForm from "./CreateEditRequestForm";
 import axios from "axios/index";
-// import getArrayFromObject from "../../helpers/helpers";
 
 const styles = {
   addButton: {
@@ -54,14 +49,14 @@ export class Requests extends React.Component {
 
   constructor(props) {
     super(props);
-    const values = queryString.parse(this.props.location.search);
+    const values = new URLSearchParams(this.props.location.search);
     this._initState = {
       showCreateEditForm: false,
       showPrintingForm: false,
       showQuoteForm: false,
       showRequestsTable: true,
-      showPaymentMessage: values.showPaymentMessage,
-      errorPaymentMessage: values.errorPaymentMessage,
+      showPaymentMessage: values.has('showPaymentMessage'),
+      errorPaymentMessage: values.has('errorPaymentMessage'),
       request: {
         price: {
           amount: '',
@@ -197,7 +192,7 @@ export class Requests extends React.Component {
 
   getPaymentMessage = () => {
     let paymentMessage = null;
-    if (this.state.showPaymentMessage === '1') {
+    if (this.state.showPaymentMessage) {
       if (this.state.errorPaymentMessage) {
         paymentMessage = {
           message: 'Su pago no ha sido acreditado.',

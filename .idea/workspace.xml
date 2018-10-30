@@ -3,7 +3,9 @@
   <component name="ChangeListManager">
     <list default="true" id="2576bdf5-43d3-4f13-8400-5226abbce187" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/package.json" afterPath="$PROJECT_DIR$/package.json" />
+      <change beforePath="$PROJECT_DIR$/client/package-lock.json" afterPath="$PROJECT_DIR$/client/package-lock.json" />
+      <change beforePath="$PROJECT_DIR$/client/package.json" afterPath="$PROJECT_DIR$/client/package.json" />
+      <change beforePath="$PROJECT_DIR$/client/src/components/Requests/Requests.js" afterPath="$PROJECT_DIR$/client/src/components/Requests/Requests.js" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -14,12 +16,24 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="package.json" pinned="false" current-in-tab="true">
+      <file leaf-file-name="package.json" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/package.json">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="330">
-              <caret line="22" column="32" lean-forward="true" selection-start-line="22" selection-start-column="32" selection-end-line="22" selection-end-column="32" />
+              <caret line="22" column="32" lean-forward="false" selection-start-line="22" selection-start-column="32" selection-end-line="22" selection-end-column="32" />
               <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Requests.js" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/client/src/components/Requests/Requests.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="181">
+              <caret line="53" column="32" lean-forward="true" selection-start-line="53" selection-start-column="32" selection-end-line="53" selection-end-column="32" />
+              <folding>
+                <element signature="e#0#26#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -62,6 +76,7 @@
       <find>var</find>
       <find>ole.c</find>
       <find>admin</find>
+      <find>showpayment</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -116,11 +131,11 @@
         <option value="$PROJECT_DIR$/client/src/components/NavigationBar.js" />
         <option value="$PROJECT_DIR$/client/src/App.js" />
         <option value="$PROJECT_DIR$/routes/payments.js" />
-        <option value="$PROJECT_DIR$/client/src/components/Requests/Requests.js" />
         <option value="$PROJECT_DIR$/client/src/components/Requests/RequestsTable.js" />
         <option value="$PROJECT_DIR$/controllers/payment.js" />
         <option value="$PROJECT_DIR$/client/package.json" />
         <option value="$PROJECT_DIR$/package.json" />
+        <option value="$PROJECT_DIR$/client/src/components/Requests/Requests.js" />
       </list>
     </option>
   </component>
@@ -182,6 +197,12 @@
             <path>
               <item name="cluster" type="b2602c69:ProjectViewProjectNode" />
               <item name="cluster" type="2a2b976b:PhpTreeStructureProvider$1" />
+              <item name="client" type="2a2b976b:PhpTreeStructureProvider$1" />
+              <item name="public" type="2a2b976b:PhpTreeStructureProvider$1" />
+            </path>
+            <path>
+              <item name="cluster" type="b2602c69:ProjectViewProjectNode" />
+              <item name="cluster" type="2a2b976b:PhpTreeStructureProvider$1" />
               <item name="controllers" type="2a2b976b:PhpTreeStructureProvider$1" />
             </path>
           </expand>
@@ -196,7 +217,7 @@
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="JavaScriptWeakerCompletionTypeGuess" value="true" />
-    <property name="SearchEverywhereHistoryKey" value="RequestT&#9;FILE&#9;file:///Users/maxo/Desktop/cluster/client/src/components/Requests/RequestsTable.js&#10;Req&#9;FILE&#9;file:///Users/maxo/Desktop/cluster/client/src/components/Requests/Requests.js&#10;payme&#9;FILE&#9;file:///Users/maxo/Desktop/cluster/controllers/payment.js&#10;Requests.js&#9;FILE&#9;file:///Users/maxo/Desktop/cluster/client/src/components/Requests/Requests.js&#10;Createeditre&#9;null&#9;null&#10;Naviga&#9;FILE&#9;file:///Users/maxo/Desktop/cluster/client/src/components/NavigationBar.js&#10;Regis&#9;null&#9;null&#10;requestta&#9;FILE&#9;file:///Users/maxo/Desktop/cluster/client/src/components/Requests/RequestsTable.js&#10;PrintRequest&#9;FILE&#9;file:///Users/maxo/Desktop/cluster/client/src/components/Requests/PrintRequestForm.js&#10;Home&#9;FILE&#9;file:///Users/maxo/Desktop/cluster/client/src/components/Home.js&#10;Printers.js&#9;FILE&#9;file:///Users/maxo/Desktop/cluster/client/src/components/Printers/Printers.js&#10;Request&#9;FILE&#9;file:///Users/maxo/Desktop/cluster/client/src/components/Requests/Requests.js&#10;applymi&#9;FILE&#9;file:///Users/maxo/Desktop/cluster/client/node_modules/redux/src/applyMiddleware.js&#10;actions/requ&#9;FILE&#9;file:///Users/maxo/Desktop/cluster/client/src/actions/requests.js&#10;Requests&#9;FILE&#9;file:///Users/maxo/Desktop/cluster/client/src/components/Requests/RequestsTable.js&#10;quer&#9;null&#9;null&#10;auth&#9;FILE&#9;file:///Users/maxo/Desktop/cluster/client/src/actions/authentication.js&#10;actions/&#9;FILE&#9;file:///Users/maxo/Desktop/cluster/client/src/actions&#10;reducer&#9;FILE&#9;file:///Users/maxo/Desktop/cluster/client/src/reducers/requestsReducer.js&#10;nav&#9;FILE&#9;file:///Users/maxo/Desktop/cluster/client/src/components/NavigationBar.js&#10;reducers/&#9;FILE&#9;file:///Users/maxo/Desktop/cluster/client/src/reducers&#10;action&#9;FILE&#9;file:///Users/maxo/Desktop/cluster/client/src/components/Requests/ActionButtons.js&#10;mailer&#9;FILE&#9;file:///Users/maxo/Desktop/cluster/mailer/mailer.js&#10;dashboa&#9;FILE&#9;file:///Users/maxo/Desktop/cluster/client/src/components/Dashboard/Dashboard.js&#10;authentication.js&#9;FILE&#9;file:///Users/maxo/Desktop/cluster/client/src/actions/authentication.js&#10;dashb&#9;FILE&#9;file:///Users/maxo/Desktop/cluster/client/src/components/Dashboard/Dashboard.js&#10;reducers/pr&#9;FILE&#9;file:///Users/maxo/Desktop/cluster/client/src/reducers/printersReducer.js&#10;mail&#9;FILE&#9;file:///Users/maxo/Desktop/cluster3d-server/mailer/mailer.js&#10;user&#9;FILE&#9;file:///Users/maxo/Desktop/cluster3d-server/routes/user.js&#10;env&#9;null&#9;null" />
+    <property name="SearchEverywhereHistoryKey" value="Requests&#9;FILE&#9;file:///Users/maxo/Desktop/cluster/client/src/components/Requests/Requests.js&#10;RequestT&#9;FILE&#9;file:///Users/maxo/Desktop/cluster/client/src/components/Requests/RequestsTable.js&#10;Req&#9;FILE&#9;file:///Users/maxo/Desktop/cluster/client/src/components/Requests/Requests.js&#10;payme&#9;FILE&#9;file:///Users/maxo/Desktop/cluster/controllers/payment.js&#10;Requests.js&#9;FILE&#9;file:///Users/maxo/Desktop/cluster/client/src/components/Requests/Requests.js&#10;Createeditre&#9;null&#9;null&#10;Naviga&#9;FILE&#9;file:///Users/maxo/Desktop/cluster/client/src/components/NavigationBar.js&#10;Regis&#9;null&#9;null&#10;requestta&#9;FILE&#9;file:///Users/maxo/Desktop/cluster/client/src/components/Requests/RequestsTable.js&#10;PrintRequest&#9;FILE&#9;file:///Users/maxo/Desktop/cluster/client/src/components/Requests/PrintRequestForm.js&#10;Home&#9;FILE&#9;file:///Users/maxo/Desktop/cluster/client/src/components/Home.js&#10;Printers.js&#9;FILE&#9;file:///Users/maxo/Desktop/cluster/client/src/components/Printers/Printers.js&#10;Request&#9;FILE&#9;file:///Users/maxo/Desktop/cluster/client/src/components/Requests/Requests.js&#10;applymi&#9;FILE&#9;file:///Users/maxo/Desktop/cluster/client/node_modules/redux/src/applyMiddleware.js&#10;actions/requ&#9;FILE&#9;file:///Users/maxo/Desktop/cluster/client/src/actions/requests.js&#10;quer&#9;null&#9;null&#10;auth&#9;FILE&#9;file:///Users/maxo/Desktop/cluster/client/src/actions/authentication.js&#10;actions/&#9;FILE&#9;file:///Users/maxo/Desktop/cluster/client/src/actions&#10;reducer&#9;FILE&#9;file:///Users/maxo/Desktop/cluster/client/src/reducers/requestsReducer.js&#10;nav&#9;FILE&#9;file:///Users/maxo/Desktop/cluster/client/src/components/NavigationBar.js&#10;reducers/&#9;FILE&#9;file:///Users/maxo/Desktop/cluster/client/src/reducers&#10;action&#9;FILE&#9;file:///Users/maxo/Desktop/cluster/client/src/components/Requests/ActionButtons.js&#10;mailer&#9;FILE&#9;file:///Users/maxo/Desktop/cluster/mailer/mailer.js&#10;dashboa&#9;FILE&#9;file:///Users/maxo/Desktop/cluster/client/src/components/Dashboard/Dashboard.js&#10;authentication.js&#9;FILE&#9;file:///Users/maxo/Desktop/cluster/client/src/actions/authentication.js&#10;dashb&#9;FILE&#9;file:///Users/maxo/Desktop/cluster/client/src/components/Dashboard/Dashboard.js&#10;reducers/pr&#9;FILE&#9;file:///Users/maxo/Desktop/cluster/client/src/reducers/printersReducer.js&#10;mail&#9;FILE&#9;file:///Users/maxo/Desktop/cluster3d-server/mailer/mailer.js&#10;user&#9;FILE&#9;file:///Users/maxo/Desktop/cluster3d-server/routes/user.js&#10;env&#9;null&#9;null" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
@@ -250,12 +271,12 @@
       <workItem from="1540252238924" duration="3178000" />
       <workItem from="1540415123518" duration="3927000" />
       <workItem from="1540512532077" duration="5310000" />
-      <workItem from="1540846796654" duration="10717000" />
+      <workItem from="1540846796654" duration="11269000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="67730000" />
+    <option name="totallyTimeSpent" value="68282000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1440" height="823" extended-state="0" />
@@ -605,7 +626,7 @@
         <state relative-caret-position="274">
           <caret line="56" column="44" lean-forward="false" selection-start-line="56" selection-start-column="44" selection-end-line="56" selection-end-column="44" />
           <folding>
-            <element signature="e#0#25#0" expanded="true" />
+            <element signature="e#0#25#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -615,16 +636,6 @@
         <state relative-caret-position="495">
           <caret line="40" column="6" lean-forward="false" selection-start-line="40" selection-start-column="6" selection-end-line="40" selection-end-column="6" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/client/src/components/Requests/Requests.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="317">
-          <caret line="254" column="62" lean-forward="true" selection-start-line="254" selection-start-column="62" selection-end-line="254" selection-end-column="62" />
-          <folding>
-            <element signature="e#0#26#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -667,8 +678,18 @@
     <entry file="file://$PROJECT_DIR$/package.json">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="330">
-          <caret line="22" column="32" lean-forward="true" selection-start-line="22" selection-start-column="32" selection-end-line="22" selection-end-column="32" />
+          <caret line="22" column="32" lean-forward="false" selection-start-line="22" selection-start-column="32" selection-end-line="22" selection-end-column="32" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/src/components/Requests/Requests.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="181">
+          <caret line="53" column="32" lean-forward="true" selection-start-line="53" selection-start-column="32" selection-end-line="53" selection-end-column="32" />
+          <folding>
+            <element signature="e#0#26#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
