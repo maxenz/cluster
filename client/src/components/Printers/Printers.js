@@ -17,8 +17,6 @@ import PrinterImage from '../../images/printer.png';
 import Loader from '../Loader';
 import PropTypes from "prop-types";
 
-const source = [];
-
 const styles = {
   addButton: {
     float: 'right',

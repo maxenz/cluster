@@ -13,6 +13,7 @@ import {
   REQUESTS_STATUS_READY_TO_DELIVER,
   REQUESTS_STATUS_READY_TO_PRINT,
   REQUESTS_STATUS_SENT_BY_USER,
+  REQUESTS_STATUS_QUOTE_ACCEPTED,
 } from "../../constants/requests";
 
 const colorsList = [
@@ -36,6 +37,7 @@ const requestStatesList = [
   {value: REQUESTS_STATUS_PRINTING, text: 'IMPRIMIENDO'},
   {value: REQUESTS_STATUS_READY_TO_DELIVER, text: 'LISTO PARA RETIRAR'},
   {value: REQUESTS_STATUS_DONE, text: 'ENTREGADA'},
+  {value: REQUESTS_STATUS_QUOTE_ACCEPTED, text: 'COTIZACION ACEPTADA'},
 ];
 
 const getColorByValue = (color) => {

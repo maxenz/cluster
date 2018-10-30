@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import {connect} from "react-redux";
 import {Link, withRouter} from 'react-router-dom';
 import {Container, Menu, Dropdown, Icon, Label} from 'semantic-ui-react';
-import LogoSite from '../images/logo.png';
 // import SignOutButton from './SignOut';
 // import * as routes from '../constants/routes';
 // import {REQUESTS_STATUS_READY_TO_PRINT, REQUESTS_STATUS_SENT_BY_USER} from

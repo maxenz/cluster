@@ -3,17 +3,18 @@ import RequestsTable from "./RequestsTable";
 import {withRouter} from 'react-router-dom';
 import PropTypes from 'prop-types';
 import moment from 'moment';
-import {Button, Icon} from 'semantic-ui-react';
+import {Button, Icon, Message} from 'semantic-ui-react';
 import Loader from '../Loader';
 import LoadingRequestsImage from '../../images/3dprinting.png';
 import QuotingForm from "./QuotingForm";
 import PrintRequestForm from './PrintRequestForm';
 import {
-  REQUESTS_STATUS_PRINTING,
+  REQUESTS_STATUS_PRINTING, REQUESTS_STATUS_QUOTE_ACCEPTED,
   REQUESTS_STATUS_QUOTE_REJECTED, REQUESTS_STATUS_QUOTED_BY_ADMIN,
   REQUESTS_STATUS_READY_TO_DELIVER, REQUESTS_STATUS_READY_TO_PRINT
 } from
       "../../constants/requests";
+import queryString from 'query-string';
 // import {getFileUrl} from
 // "../../firebase/storage"; import PrintRequestForm from
 // '../requests/PrintRequestForm';
@@ -22,9 +23,15 @@ import {
   PRINTER_STATUS_WORKING
 } from "../../constants/printers";
 import {connect} from "react-redux";
-import {getRequests, removeRequest, saveRequest} from "../../actions/requests";
+import {
+  getRequests,
+  removeRequest,
+  saveRequest,
+  payRequest
+} from "../../actions/requests";
 import {getPrinters, savePrinter} from "../../actions/printers";
 import CreateEditRequestForm from "./CreateEditRequestForm";
+import axios from "axios/index";
 // import getArrayFromObject from "../../helpers/helpers";
 
 const styles = {
@@ -33,6 +40,10 @@ const styles = {
     marginRight: '10%',
     marginTop: '10px',
   },
+  paymentMessage: {
+    width: '80%',
+    marginLeft: '10%',
+  }
 };
 
 export class Requests extends React.Component {
@@ -43,11 +54,14 @@ export class Requests extends React.Component {
 
   constructor(props) {
     super(props);
+    const values = queryString.parse(this.props.location.search);
     this._initState = {
       showCreateEditForm: false,
       showPrintingForm: false,
       showQuoteForm: false,
       showRequestsTable: true,
+      showPaymentMessage: values.showPaymentMessage,
+      errorPaymentMessage: values.errorPaymentMessage,
       request: {
         price: {
           amount: '',
@@ -56,6 +70,8 @@ export class Requests extends React.Component {
     };
     this.state = this._initState;
     this.savePrinter = this.props.savePrinter.bind(this);
+
+    console.log(values);
   }
 
   cleanState = () => {
@@ -99,7 +115,7 @@ export class Requests extends React.Component {
     const request = this.props.requests[id];
     this.props.saveRequest({
       ...request, status:
-      REQUESTS_STATUS_READY_TO_PRINT
+      REQUESTS_STATUS_QUOTE_ACCEPTED
     });
   };
 
@@ -170,12 +186,50 @@ export class Requests extends React.Component {
     this.setState({...this.state, request});
   };
 
+  handlePayRequest = (id) => {
+    axios.post('/api/payments/', {
+      request_id: id,
+      back_url: 'http://localhost:5000/api/payments/',
+    }).then((res) => {
+      window.open(res.data.link, '_self');
+    })
+  };
+
+  getPaymentMessage = () => {
+    let paymentMessage = null;
+    if (this.state.showPaymentMessage === '1') {
+      if (this.state.errorPaymentMessage) {
+        paymentMessage = {
+          message: 'Su pago no ha sido acreditado.',
+          header: 'Error!',
+          color: 'red',
+          icon: 'times circle outline',
+        };
+      }
+      else {
+        paymentMessage = {
+          message: 'Su pago ha sido acreditado correctamente.',
+          header: 'Transacción exitosa!',
+          color: 'green',
+          icon: 'check circle outline',
+        };
+      }
+      paymentMessage = {...paymentMessage, style: styles.paymentMessage};
+    }
+    return paymentMessage;
+  };
+
   render() {
-    const {showRequestsTable, showQuoteForm, showPrintingForm, showCreateEditForm, request} = this.state;
+    const {
+      showRequestsTable,
+      showQuoteForm,
+      showPrintingForm,
+      showCreateEditForm,
+      request
+    } = this.state;
     const {requests, auth} = this.props;
 
-    console.log('render');
-
+    const paymentMessage = this.getPaymentMessage();
     return (
         <Loader
             text="Cargando pedidos..."
@@ -185,6 +239,16 @@ export class Requests extends React.Component {
           {
             showRequestsTable && requests &&
             <div style={{marginTop: '8%'}}>
+              {
+                paymentMessage !== null &&
+                <Message
+                    style={paymentMessage.style}
+                    icon={paymentMessage.icon}
+                    color={paymentMessage.color}
+                    header={paymentMessage.header}
+                    content={paymentMessage.message}
+                />
+              }
               <RequestsTable
                   requests={requests}
                   authUser={auth.user}
@@ -192,13 +256,17 @@ export class Requests extends React.Component {
                   handleAcceptQuote={this.handleAcceptQuote}
                   handleStartPrinting={this.handleStartPrinting}
                   handleRejectQuote={this.handleRejectQuote}
-                  handleFinishPrinting={this.handleFinishPrinting}>
+                  handleFinishPrinting={this.handleFinishPrinting}
+                  handlePayRequest={this.handlePayRequest}>
               </RequestsTable>
 
-              <Button onClick={this.addRequest} icon labelPosition='left'
-                      color='orange' size='small' style={styles.addButton}>
-                <Icon name='plus circle'/> Agregar Pedido
-              </Button>
+              {
+                !auth.user.admin &&
+                <Button onClick={this.addRequest} icon labelPosition='left'
+                        color='orange' size='small' style={styles.addButton}>
+                  <Icon name='plus circle'/> Agregar Pedido
+                </Button>
+              }
             </div>
           }
           {
@@ -249,6 +317,7 @@ const mapDispatchToProps = {
   removeRequest,
   getPrinters,
   savePrinter,
+  payRequest,
 };
 
 Requests.defaultProps = {};

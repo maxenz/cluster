@@ -25,6 +25,7 @@ class App extends Component {
               <Route exact path="/login" component={Login}/>
               <Route exact path="/printers" component={Printers}/>
               <Route exact path="/requests" component={Requests}/>
+              <Route exact path="/payment_approved" component={Requests} />
             </div>
           </Router>
         </Provider>

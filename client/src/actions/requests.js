@@ -65,3 +65,16 @@ export const createRequest = (request, userId) => {
 export const updateRequest = (request) => {
   return axios.put(`/api/requests/${request._id}`, request);
 };
+
+export const payRequest = (id) => {
+  const req = axios.post('/api/payments/generate', {
+    request_id: id,
+    back_url: 'https://www.ole.com.ar',
+  });
+
+  return req.then(
+      response => console.log(response),
+      err => console.log(err)
+  );
+
+};

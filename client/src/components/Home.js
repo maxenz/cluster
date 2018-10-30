@@ -1,5 +1,5 @@
 import React from 'react';
-import {withRouter, Redirect} from 'react-router-dom';
+import {withRouter} from 'react-router-dom';
 // import {Button} from 'semantic-ui-react';
 // import {SIGN_IN} from "../../constants/routes";
 import Steps from '../components/Common/Steps';
@@ -9,9 +9,7 @@ import {
   removeNonScrollableClassToBody
 } from "../helpers/dom";
 import {connect} from "react-redux";
-import {getPrinters} from "../actions/printers";
 import {Dashboard} from "./Dashboard/Dashboard";
-import {getRequests} from "../actions/requests";
 // import {Icon} from 'semantic-ui-react';
 // import {doGoogleLogin, doFacebookLogin} from "../../firebase/auth";
 

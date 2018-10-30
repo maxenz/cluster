@@ -1,5 +1,5 @@
 import React from 'react'
-import {Form, Button, Dropdown, Segment, Label} from 'semantic-ui-react';
+import {Form, Button, Dropdown, Segment} from 'semantic-ui-react';
 import {PRINTER_STATUS_ENABLED} from "../../constants/printers";
 import BackButton from "../Common/BackButton";
 

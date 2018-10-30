@@ -1,17 +1,18 @@
-var MP = require("mercadopago");
-
+const MP = require("mercadopago");
+User = require('../models/User');
 Request = require('../models/request');
 Payment = require('../models/payment');
+const REQUESTS_STATUS_READY_TO_PRINT = 4;
 
 require('mongoose-money');
-const Money = require('moneyjs');
+
 MP.configure({
-  client_id: '8666928984748381',
-  client_secret: 'RdBdfH1toMzLiy38kUO77LOFQwRwmtYb'
+  client_id: '3542881606359725',
+  client_secret: 'h30rMBfe3jojeHJxKadyL8BOjBen8JjE'
 });
 
-exports.Generate = function (req, res) {
-  if (req.body.email != null && req.body.request_id != null && req.body.backUrl != null) {
+exports.generate = function (req, res) {
+  if (req.body.request_id !== null && req.body.back_url !== null) {
     Request.getById(function (err, request) {
       if (err) {
         res.json({
@@ -20,38 +21,42 @@ exports.Generate = function (req, res) {
         });
       }
       if (request !== null) {
-        var preference = {
-          payer: {email: req.body.email},
-          auto_return: 'all',
-          external_reference: request.id,
-          items: [
-            item = {
-              title: 'Cluster3D - Impresión (' + req.body.request_id + ')',
-              quantity: 1,
-              currency_id: 'ARS',
-              unit_price: parseFloat(request.price.amount)
-            }
-          ],
-          back_urls: {
-            success: req.body.backUrl,
-            failure: req.body.backUrl,
-            pending: req.body.backUrl
-          }
-        };
+        User.findOne({_id: request.created_by})
+            .then(user => {
+              const preference = {
+                payer: {email: user.email},
+                auto_return: 'all',
+                external_reference: request._id.toString(),
+                items: [
+                  item = {
+                    title: 'Cluster3D - Impresión (' + req.body.request_id + ')',
+                    quantity: 1,
+                    currency_id: 'ARS',
+                    unit_price: parseFloat(request.price.amount)
+                  }
+                ],
+                back_urls: {
+                  success: req.body.back_url,
+                  failure: req.body.back_url,
+                  pending: req.body.back_url
+                }
+              };
 
-        MP.preferences.create(preference)
-            .then(function (preference) {
-              res.json({
-                status: "success",
-                message: "Payment generated successfully",
-                data: preference.response.sandbox_init_point
-              });
-            }).catch(function (error) {
-          res.json({
-            status: "error",
-            message: error.message
-          });
-        });
+              MP.preferences.create(preference)
+                  .then(function (preference) {
+                    res.json({
+                      status: "success",
+                      message: "Payment generated successfully",
+                      link: preference.response.sandbox_init_point
+                    });
+                  }, (error) => {
+                    console.log(error);
+                    res.json({
+                      status: "error",
+                      message: error,
+                    });
+                  })
+            });
       }
       else {
         res.json({
@@ -67,11 +72,14 @@ exports.Generate = function (req, res) {
       message: "Wrong parameters"
     });
   }
-}
+};
 
-exports.BackResponse = function (req, res) {
+exports.backResponse = function (req, res) {
   try {
-    if (req.query.collection_status != null && req.query.collection_id != null && req.query.payment_type != null && req.query.external_reference != null) {
+    if (req.query.collection_status !== null &&
+        req.query.collection_id !== null &&
+        req.query.payment_type !== null &&
+        req.query.external_reference !== null) {
       Request.getById(function (err, request) {
         if (err) {
           res.json({
@@ -79,8 +87,8 @@ exports.BackResponse = function (req, res) {
             message: err.message
           });
         }
-        if (request != null) {
-          if (request.payment_id == null) {
+        if (request !== null) {
+          if (request.payment_id !== null) {
             let payment = new Payment();
             payment.request_id = request.id;
             payment.amount = request.price;
@@ -91,7 +99,7 @@ exports.BackResponse = function (req, res) {
             }
             payment.modify_date = Date.now();
 
-            payment.save(function (err) {
+            payment.save((err) => {
               if (err) {
                 res.json({
                   status: "error",
@@ -100,7 +108,8 @@ exports.BackResponse = function (req, res) {
               }
 
               request.payment_id = payment;
-              request.save(function (err) {
+              request.status = REQUESTS_STATUS_READY_TO_PRINT;
+              request.save((err) => {
                 if (err) {
                   res.json({
                     status: "error",
@@ -108,11 +117,16 @@ exports.BackResponse = function (req, res) {
                   });
                 }
 
-                res.json({
-                  status: "success",
-                  message: "Payment registered successfully",
-                  data: payment
-                });
+                console.log(payment);
+                const response = {
+                  showPaymentMessage: 1,
+                };
+                res.redirect(`http://localhost:3000/requests/?showPaymentMessage=${response.showPaymentMessage}`);
+                // res.json({
+                //   status: "success",
+                //   message: "Payment registered successfully",
+                //   data: payment
+                // });
               });
             });
           }
@@ -146,11 +160,12 @@ exports.BackResponse = function (req, res) {
       message: error.message
     });
   }
-}
+};
+
 exports.Notify = function (req, res) {
   try {
     if (req.body.id != null && req.body.topic != null) {
-      var merchantOrderId = req.body.id;
+      let merchantOrderId = req.body.id;
       if (req.body.topic === 'payment') {
         MP.getPayment(req.body.id).then(function (payment) {
           if (payment.status === 200 && payment.response.order != null) {
@@ -181,7 +196,7 @@ exports.Notify = function (req, res) {
       message: error.message
     });
   }
-}
+};
 
 function processMerchantOrder(res, merchantOrderId) {
 
@@ -194,8 +209,8 @@ function processMerchantOrder(res, merchantOrderId) {
             message: err.message
           });
         }
-        if (payment == null) {
-          Request.getById(function (err, request) {
+        if (payment === null) {
+          Request.getById((err, request) => {
             if (err) {
               res.json({
                 status: "error",
@@ -203,7 +218,7 @@ function processMerchantOrder(res, merchantOrderId) {
               });
             }
 
-            if (request != null) {
+            if (request !== null) {
               let payment = new Payment();
               payment.request_id = request.id;
               payment.amount = request.price;
@@ -214,7 +229,7 @@ function processMerchantOrder(res, merchantOrderId) {
               }
               payment.modify_date = Date.now();
 
-              payment.save(function (err) {
+              payment.save((err) => {
                 if (err) {
                   res.json({
                     status: "error",
@@ -257,7 +272,7 @@ function processMerchantOrder(res, merchantOrderId) {
             }
             payment.modify_date = Date.now;
 
-            payment.save(function () {
+            payment.save(() => {
               res.json({
                 status: "success",
                 message: (payment.state === 'approved') ? "Payment approved successfully." : "Payment notified successfully.",
@@ -282,7 +297,7 @@ function processMerchantOrder(res, merchantOrderId) {
         data: payment
       });
     }
-  }).catch(function (error) {
+  }).catch((error) => {
     res.json({
       status: "error",
       message: error.message
