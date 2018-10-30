@@ -5,8 +5,8 @@ const moment = require('moment');
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
-    user: 'maxenz@gmail.com',
-    pass: 'versacapo'
+    user: 'cluster2018caece@gmail.com',
+    pass: 'clu$ster2018'
   }
 });
 
