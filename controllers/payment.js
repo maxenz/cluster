@@ -121,12 +121,11 @@ exports.backResponse = function (req, res) {
                 const response = {
                   showPaymentMessage: 1,
                 };
-                res.redirect(`http://localhost:3000/requests/?showPaymentMessage=${response.showPaymentMessage}`);
-                // res.json({
-                //   status: "success",
-                //   message: "Payment registered successfully",
-                //   data: payment
-                // });
+                res.json({
+                  status: "success",
+                  message: "Payment registered successfully",
+                  data: payment
+                });
               });
             });
           }

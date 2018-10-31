@@ -65,8 +65,6 @@ export class Requests extends React.Component {
     };
     this.state = this._initState;
     this.savePrinter = this.props.savePrinter.bind(this);
-
-    console.log(values);
   }
 
   cleanState = () => {
@@ -80,8 +78,19 @@ export class Requests extends React.Component {
   }
 
   componentDidMount() {
-    this.props.getRequests();
     this.props.getPrinters();
+    const values = new URLSearchParams(this.props.location.search);
+    if (values.has('payment_type')) {
+      axios.get(`/api/payments/${this.props.location.search}`)
+          .then((res) => {
+            this.props.getRequests();
+            this.setState({
+              showPaymentMessage: res.data.status === 'success',
+              errorPaymentMessage: res.data.status === 'error',
+            });
+          })
+    }
+    this.props.getRequests();
   }
 
   addRequest = () => {
@@ -184,7 +193,7 @@ export class Requests extends React.Component {
   handlePayRequest = (id) => {
     axios.post('/api/payments/', {
       request_id: id,
-      back_url: 'http://localhost:5000/api/payments/',
+      back_url: 'https://blooming-gorge-94232.herokuapp.com/requests/',
     }).then((res) => {
       window.open(res.data.link, '_self');
     })
