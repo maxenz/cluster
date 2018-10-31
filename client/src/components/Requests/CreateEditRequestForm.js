@@ -70,7 +70,7 @@ class CreateEditRequestForm extends Component {
 
   handleFileChange = (e, results) => {
     const [pgEvent, file] = results[0];
-    if (file.name.endsWith('stl')) {
+    if (file.name.toUpperCase().endsWith('STL')) {
       this.setState({uploadedFile: file, fileName: `${moment()}_${file.name}`});
       this.clearError();
     }
