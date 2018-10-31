@@ -11,7 +11,7 @@ const transporter = nodemailer.createTransport({
 });
 
 const email = new Email({
-  // preview: false,
+  preview: false,
   send: true,
   transport: transporter,
 });
@@ -19,7 +19,7 @@ const email = new Email({
 exports.sendRegisterEmail = (user) => {
   return email
       .send({
-        template: 'quotation',
+        template: 'register',
         subject: 'Bienvenida/o a Cluster3D!',
         message: {
           to: user.email,
