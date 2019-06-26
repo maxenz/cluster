@@ -6,6 +6,7 @@ export const REQUESTS_STATUS_QUOTE_REJECTED = 5;
 export const REQUESTS_STATUS_PRINTING = 6;
 export const REQUESTS_STATUS_READY_TO_DELIVER = 7;
 export const REQUESTS_STATUS_DONE = 8;
+export const REQUESTS_STATUS_CANCELED = 9;
 
 export const COLORS_BLUE = 1;
 export const COLORS_BLACK = 2;
