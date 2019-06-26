@@ -1,12 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="2576bdf5-43d3-4f13-8400-5226abbce187" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/client/src/components/Requests/Requests.js" afterPath="$PROJECT_DIR$/client/src/components/Requests/Requests.js" />
-      <change beforePath="$PROJECT_DIR$/controllers/payment.js" afterPath="$PROJECT_DIR$/controllers/payment.js" />
-      <change beforePath="$PROJECT_DIR$/emails/quotation/html.pug" afterPath="$PROJECT_DIR$/emails/quotation/html.pug" />
-    </list>
+    <list default="true" id="2576bdf5-43d3-4f13-8400-5226abbce187" name="Default" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -292,12 +287,12 @@
       <workItem from="1540415123518" duration="3927000" />
       <workItem from="1540512532077" duration="5310000" />
       <workItem from="1540846796654" duration="12460000" />
-      <workItem from="1540946049967" duration="5802000" />
+      <workItem from="1540946049967" duration="6474000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="75275000" />
+    <option name="totallyTimeSpent" value="75947000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1440" height="823" extended-state="6" />
