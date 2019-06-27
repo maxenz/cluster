@@ -43,6 +43,7 @@ const RequestsTable = props => {
             <Table.HeaderCell>Importe</Table.HeaderCell>
             <Table.HeaderCell>Trab. listo en</Table.HeaderCell>
             <Table.HeaderCell />
+            <Table.HeaderCell>Archivo</Table.HeaderCell>
           </Table.Row>
         </Table.Header>
 
@@ -114,6 +115,11 @@ const RequestsTable = props => {
                         handleCancelRequest={handleCancelRequest}
                         pendingMinutes={pendingMinutes}
                       />
+                    </Table.Cell>
+                    <Table.Cell>
+                      <a href={request.file_name} _blank>
+                        Descargar
+                      </a>
                     </Table.Cell>
                   </Table.Row>
                 );
