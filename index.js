@@ -23,8 +23,29 @@ app.use(bodyParser.json());
 
 const port = process.env.PORT || 5000;
 
-app.use('/api/users', users);
-app.use('/api', apiRoutes);
+
+const server = require("http").Server(app);
+let io = require("socket.io")(server);
+server.listen(5001);
+
+io.on("connection", function(socket) {
+  // socket.emit("news", { hello: "world" });
+  console.log("connected");
+});
+
+app.use(function(req, res, next) {
+  req.io = io;
+  next();
+});
+
+
+
+app.use("/api/users", users);
+app.use("/api", apiRoutes);
+
+app.listen(port, function() {
+  console.log("Running cluster3d server on port " + port);
+});
 
 // Serve static files from the React app
 app.use(express.static(path.join(__dirname, 'client/build')));
@@ -35,6 +56,5 @@ app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname+'/client/build/index.html'));
 });
 
-app.listen(port, function () {
-  console.log('Running cluster3d server on port ' + port);
-});
+
+

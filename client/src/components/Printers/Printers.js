@@ -16,6 +16,7 @@ import {getRequests} from "../../actions/requests";
 import PrinterImage from '../../images/printer.png';
 import Loader from '../Loader';
 import PropTypes from "prop-types";
+import io from 'socket.io-client';
 
 const styles = {
   addButton: {
@@ -121,6 +122,10 @@ class Printers extends React.Component {
   componentDidMount() {
     this.props.getPrinters();
     this.props.getRequests();
+    var socket = io.connect("http://localhost:5001");
+    socket.on("news", function(data) {
+      console.log(data);      
+    });
   }
 
   componentWillMount() {

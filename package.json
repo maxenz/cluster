@@ -34,6 +34,7 @@
     "passport-jwt": "^4.0.0",
     "pug": "^2.0.3",
     "sendgrid": "^5.2.3",
+    "socket.io": "^2.3.0",
     "validator": "^10.7.0"
   }
 }
