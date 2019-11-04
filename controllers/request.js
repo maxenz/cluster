@@ -7,7 +7,7 @@ const REQUESTS_STATUS_QUOTED_BY_ADMIN = 2;
 
 exports.index = function (req, res) {
 
-  Request.get(function (err, requests) {
+  Request.get(function (err, requests) {    
     if (err) {
       res.json({
         status: "error",

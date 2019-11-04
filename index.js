@@ -29,16 +29,13 @@ let io = require("socket.io")(server);
 server.listen(5001);
 
 io.on("connection", function(socket) {
-  // socket.emit("news", { hello: "world" });
-  console.log("connected");
+  socket.emit("news", { hello: "world" });  
 });
 
-app.use(function(req, res, next) {
-  req.io = io;
-  next();
-});
-
-
+// app.use(function(req, res, next) {
+//   req.io = io;
+//   next();
+// });
 
 app.use("/api/users", users);
 app.use("/api", apiRoutes);

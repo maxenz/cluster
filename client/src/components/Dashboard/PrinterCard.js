@@ -20,49 +20,54 @@ const styles = {
   }
 };
 
-const PrinterCard = (props) =>
-    <div style={styles.printerCardsContainer}>
-      <Card>
-        <Card.Content>
-          <Icon name='print' style={styles.cardIcon}/>
-          <Card.Header>
-            Impresora {props.info.printer.name}
-          </Card.Header>
-          <Card.Meta>
-            {
-              props.info.pendingMinutes > 0 ?
-                  <div>
-                    <span>Libre en: </span>
-                    <Countdown date={Date.now() + (props.info.pendingMinutes * 60000)}/>
-                  </div> :
-                  <Label color="orange" style={{marginTop: '5px'}}>
-                    Libre
-                  </Label>
-            }
+const PrinterCard = props => (
+  <div style={styles.printerCardsContainer}>
+    <Card>
+      <Card.Content>
+        <Icon name="print" style={styles.cardIcon} />
+        <Card.Header>Impresora {props.info.printer.name}</Card.Header>
+        <Card.Meta>
+          {props.info.pendingMinutes > 0 ? (
+            <div>
+              <span>Libre en: </span>
+              <Countdown
+                date={Date.now() + props.info.pendingMinutes * 60000}
+              />
+            </div>
+          ) : (
+            <Label color="orange" style={{ marginTop: "5px" }}>
+              Libre
+            </Label>
+          )}
+        </Card.Meta>
+        {props.info.actualRequest ? (
+          <Card.Description>
+            Actualmente se está imprimiendo el archivo{" "}
+            <strong>
+              {props.info.actualRequest.file_name.length > 30
+                ? `${props.info.actualRequest.file_name.substring(0, 30)}...`
+                : props.info.actualRequest.file_name}
+            </strong>
+          </Card.Description>
+        ) : null}
+      </Card.Content>
+      <Card.Content extra>
+        <Statistic.Group style={{ height: "77px" }}>
+          <Statistic style={styles.cardValue}>
+            <Statistic.Value style={styles.statisticValue}>0</Statistic.Value>
+            <Statistic.Label>Imp. en cola</Statistic.Label>
+          </Statistic>
 
-          </Card.Meta>
-          {
-            props.info.actualRequest ?
-                <Card.Description>
-                  Actualmente se está imprimiendo el archivo <strong>{props.info.actualRequest.file_name}</strong>
-                </Card.Description> : null
-          }
-        </Card.Content>
-        <Card.Content extra>
-          <Statistic.Group style={{height: '77px'}}>
-            <Statistic style={styles.cardValue}>
-              <Statistic.Value style={styles.statisticValue}>0</Statistic.Value>
-              <Statistic.Label>Imp. en cola</Statistic.Label>
-            </Statistic>
-
-            <Statistic style={styles.cardValue}>
-              <Statistic.Value style={styles.statisticValue}>{props.info.reqMade}</Statistic.Value>
-              <Statistic.Label>Imp. realizadas</Statistic.Label>
-            </Statistic>
-
-          </Statistic.Group>
-        </Card.Content>
-      </Card>
-    </div>;
+          <Statistic style={styles.cardValue}>
+            <Statistic.Value style={styles.statisticValue}>
+              {props.info.reqMade}
+            </Statistic.Value>
+            <Statistic.Label>Imp. realizadas</Statistic.Label>
+          </Statistic>
+        </Statistic.Group>
+      </Card.Content>
+    </Card>
+  </div>
+);
 
 export default PrinterCard;
