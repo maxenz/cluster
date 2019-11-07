@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import { Provider } from "react-redux";
 import store from "./store";
-
 import NavigationBar from "./components/NavigationBar";
 import Register from "./components/Register";
 import Login from "./components/Login";
@@ -10,16 +9,8 @@ import Home from "./components/Home";
 import Printers from "./components/Printers/Printers";
 import Requests from "./components/Requests/Requests";
 import Dashboard from "./components/Dashboard/Dashboard";
-import io from "socket.io-client";
 
 class App extends Component {
-  componentDidMount() {
-    const socket = io.connect("http://localhost:5001", { 'forceNew': true });
-    socket.on("news", function(data) {
-      console.log(data);
-    });    
-  }
-
   render() {
     return (
       <Provider store={store}>

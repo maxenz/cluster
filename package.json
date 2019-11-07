@@ -7,7 +7,7 @@
   "description": "Rest api for cluster3d",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
+    "start": "node --inspect index.js",
     "test": "node test.js",
     "heroku-postbuild": "cd client && npm install && npm run build"
   },
