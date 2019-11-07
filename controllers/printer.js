@@ -1,7 +1,7 @@
 Printer = require('../models/printer');
 // Handle index actions
-exports.index = (req, res) => {
-  Printer.get(function (err, printers) {
+exports.index = (req, res) => {    
+  Printer.get(function (err, printers) {      
     if (err) {
       res.json({
         status: "error",
