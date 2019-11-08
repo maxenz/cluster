@@ -1,17 +1,42 @@
-Request = require('../models/request');
-User = require('../models/User');
-require('mongoose-money');
-const mailer = require('../mailer/mailer');
-const Money = require('moneyjs');
+Request = require("../models/request");
+User = require("../models/User");
+require("mongoose-money");
+const mailer = require("../mailer/mailer");
+const Money = require("moneyjs");
+const REQUESTS_STATUS_SENT_BY_USER = 1;
 const REQUESTS_STATUS_QUOTED_BY_ADMIN = 2;
+const REQUESTS_STATUS_QUOTE_ACCEPTED = 3;
+const REQUESTS_STATUS_QUOTE_REJECTED = 5;
+const REQUESTS_STATUS_PRINTING = 6;
+const REQUESTS_STATUS_READY_TO_DELIVER = 7;
 
-exports.index = function (req, res) {
+const isAdminUpdate = status => {
+  return [2, 4, 6, 7, 8].includes(status);
+};
 
-  Request.get(function (err, requests) {
+const getUpdateMessageByStatus = request => {
+  switch (request.status) {
+    case REQUESTS_STATUS_SENT_BY_USER:
+      return "Hay un nuevo pedido para cotizar.";
+    case REQUESTS_STATUS_QUOTED_BY_ADMIN:
+      return `Tu pedido ${request._id} fue cotizado por un administrador.`;
+    case REQUESTS_STATUS_QUOTE_ACCEPTED:
+      return `La cotización del pedido ${request._id} fue aceptada.`;
+    case REQUESTS_STATUS_QUOTE_REJECTED:
+      return `La cotización del pedido ${request._id} fue rechazada.`;
+    case REQUESTS_STATUS_PRINTING:
+      return `Tu pedido ${request._id} comenzó a imprimirse.`;
+    case REQUESTS_STATUS_READY_TO_DELIVER:
+      return `Tu pedido ${request._id} está listo para retirar.`;
+  }
+};
+
+exports.index = function(req, res) {
+  Request.get(function(err, requests) {
     if (err) {
       res.json({
         status: "error",
-        message: err,
+        message: err
       });
     }
     res.json({
@@ -22,7 +47,7 @@ exports.index = function (req, res) {
   });
 };
 
-exports.new = function (req, res) {
+exports.new = function(req, res) {
   let request = new Request();
   request.material_type = req.body.material_type;
   request.color_type = req.body.color_type;
@@ -36,47 +61,63 @@ exports.new = function (req, res) {
   request.file_name = req.body.file_name;
   request.created_by = req.body.created_by;
 
-  request.save(function (err) {
+  request.save(function(err) {
     if (err) {
       res.json(err);
     }
     res.json({
-      message: 'New request created!',
+      message: "New request created!",
       data: request
     });
   });
 };
 
 exports.update = (req, res) => {
-  Request.findByIdAndUpdate(req.params.request_id, {
-    ...req.body,
-    price: req.body.price.amount ? new Money(req.body.price.amount) : new Money(req.body.price),
-  }, {new: true}, (err, doc) => {
-    if (err) {
-      res.json(err);
-    }
+  Request.findByIdAndUpdate(
+    req.params.request_id,
+    {
+      ...req.body,
+      price: req.body.price.amount
+        ? new Money(req.body.price.amount)
+        : new Money(req.body.price)
+    },
+    { new: true },
+    (err, doc) => {
+      if (err) {
+        res.json(err);
+      }
 
-    if (req.body.status === REQUESTS_STATUS_QUOTED_BY_ADMIN) {
-      User.findOne({_id: req.body.created_by})
-          .then(user => {
-            const quotation = {...req.body, user};
-            mailer.sendQuotationEmail(quotation)
-                .then(() => {
-                  res.json({
-                    message: 'Updated request is',
-                    data: doc
-                  });
-                }, (error) => {
-                  console.log(error.response.body);
-                })
-          });
-    }
-    else {
-      res.json({
-        message: 'Updated request is',
-        data: doc
-      });
-    }
+      if (isAdminUpdate(req.body.status)) {
+        if (req.socketClients[req.body.created_by]) {
+          req.io.sockets.connected[
+            req.socketClients[req.body.created_by].socket
+          ].emit("request-notification", getUpdateMessageByStatus(req.body));
+        }
+      } else {
+        req.io.emit('admin-request-notification', getUpdateMessageByStatus(req.body));
+      }
 
-  })
+      if (req.body.status === REQUESTS_STATUS_QUOTED_BY_ADMIN) {
+        User.findOne({ _id: req.body.created_by }).then(user => {
+          const quotation = { ...req.body, user };
+          mailer.sendQuotationEmail(quotation).then(
+            () => {
+              res.json({
+                message: "Updated request is",
+                data: doc
+              });
+            },
+            error => {
+              console.log(error.response.body);
+            }
+          );
+        });
+      } else {
+        res.json({
+          message: "Updated request is",
+          data: doc
+        });
+      }
+    }
+  );
 };

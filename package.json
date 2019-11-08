@@ -7,7 +7,7 @@
   "description": "Rest api for cluster3d",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
+    "start": "node --inspect index.js",
     "test": "node test.js",
     "heroku-postbuild": "cd client && npm install && npm run build"
   },
@@ -34,6 +34,7 @@
     "passport-jwt": "^4.0.0",
     "pug": "^2.0.3",
     "sendgrid": "^5.2.3",
+    "socket.io": "^2.3.0",
     "validator": "^10.7.0"
   }
 }
