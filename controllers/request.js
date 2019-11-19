@@ -87,10 +87,16 @@ exports.update = (req, res) => {
         if (req.socketClients[req.body.created_by]) {
           req.io.sockets.connected[
             req.socketClients[req.body.created_by].socket
-          ].emit("request-notification", getUpdateMessageByStatus(req.body));
+          ].emit("request-notification", {
+            message: getUpdateMessageByStatus(req.body),
+            request: req.body
+          });
         }
       } else {
-        req.io.emit('admin-request-notification', getUpdateMessageByStatus(req.body));
+        req.io.emit("admin-request-notification", {
+          message: getUpdateMessageByStatus(req.body),
+          request: req.body
+        });
       }
 
       if (req.body.status === REQUESTS_STATUS_QUOTED_BY_ADMIN) {

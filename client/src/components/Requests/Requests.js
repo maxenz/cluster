@@ -279,8 +279,7 @@ export class Requests extends React.Component {
                 content={paymentMessage.message}
               />
             )}
-            <RequestsTable
-              requests={requests}
+            <RequestsTable              
               authUser={auth.user}
               handleQuoteRequest={this.handleQuoteRequest}
               handleAcceptQuote={this.handleAcceptQuote}

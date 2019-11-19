@@ -1,6 +1,7 @@
 import React from "react";
 import { Table, Label, Pagination, Icon, Input } from "semantic-ui-react";
 import moment from "moment";
+import { connect } from "react-redux";
 import {
   getColorByValue,
   materialsList,
@@ -20,28 +21,37 @@ const styles = {
   }
 };
 
-export default class RequestsTable extends React.Component {
+class RequestsTable extends React.Component {
   pagination = { pageSize: 10, activePage: 1, totalPages: 0 };
 
   constructor(props) {
     super(props);
 
-    this.state= {
-      query: '',
+    this.state = {
+      query: "",
       pagedRequests: []
     };
   }
 
   componentDidMount() {
-    this.processPage()
+    this.processPage();
   }
 
   processPage = () => {
     let list = Object.values(this.props.requests);
     let query = this.state.query;
-    if(this.state.query !== ''){
-      list = list.filter((val)=>{
-        let row = val._id + '|' + val.color_type + '|' + materialsList.find(x => x.value === val.material_type).text + '|' + moment(val.create_date).format("DD/MM/YYYY hh:mm") + '|' + requestStatesList.find(x => x.value === val.status).text;
+    if (this.state.query !== "") {
+      list = list.filter(val => {
+        let row =
+          val._id +
+          "|" +
+          val.color_type +
+          "|" +
+          materialsList.find(x => x.value === val.material_type).text +
+          "|" +
+          moment(val.create_date).format("DD/MM/YYYY hh:mm") +
+          "|" +
+          requestStatesList.find(x => x.value === val.status).text;
 
         return row.toLocaleLowerCase().includes(query.toLocaleLowerCase());
       });
@@ -51,32 +61,40 @@ export default class RequestsTable extends React.Component {
     let from = (this.pagination.activePage - 1) * this.pagination.pageSize;
     let to = from + this.pagination.pageSize;
 
-    list = list.filter((val, index) => { return index >= from && index < to; });
+    list = list.filter((val, index) => {
+      return index >= from && index < to;
+    });
 
     this.setState({
       pagedRequests: list
-    })
-  }
+    });
+  };
 
   changePage = (e, { activePage }) => {
     this.pagination.activePage = activePage;
     this.processPage();
-  }
+  };
 
-  handleChange = (e) => {
-    this.setState({ query: e.target.value },()=>{
+  handleChange = e => {
+    this.setState({ query: e.target.value }, () => {
       this.processPage();
-    });    
-  }
+    });
+  };
 
-  render() {
+  render() {    
     return (
       <div>
-        <Input style={styles.paginator}
-          action={{ color: "orange", labelPosition: "right", icon: "search", content: "Buscar" }}
+        <Input
+          style={styles.paginator}
+          action={{
+            color: "orange",
+            labelPosition: "right",
+            icon: "search",
+            content: "Buscar"
+          }}
           placeholder="Search..."
           value={this.state.query}
-          onChange={ this.handleChange }
+          onChange={this.handleChange}
         />
         <Table style={styles.table} striped celled selectable>
           <Table.Header>
@@ -95,16 +113,18 @@ export default class RequestsTable extends React.Component {
 
           <Table.Body>
             {this.state.pagedRequests.map(request => {
-              const pendingMinutes = moment(
-                request.finish_printing_time
-              ).diff(moment(), "minutes", true);
+              const pendingMinutes = moment(request.finish_printing_time).diff(
+                moment(),
+                "minutes",
+                true
+              );
               return (
                 <Table.Row key={request._id}>
                   <Table.Cell>
                     {request.payment_id && (
                       <Label as="a" color="blue" ribbon>
                         Pagado
-                          </Label>
+                      </Label>
                     )}
                     {request._id}
                   </Table.Cell>
@@ -117,9 +137,8 @@ export default class RequestsTable extends React.Component {
                   </Table.Cell>
                   <Table.Cell>
                     {
-                      materialsList.find(
-                        x => x.value === request.material_type
-                      ).text
+                      materialsList.find(x => x.value === request.material_type)
+                        .text
                     }
                   </Table.Cell>
                   <Table.Cell>
@@ -163,7 +182,7 @@ export default class RequestsTable extends React.Component {
                   <Table.Cell>
                     <a href={request.file_name} target="_blank">
                       Descargar
-                        </a>
+                    </a>
                   </Table.Cell>
                 </Table.Row>
               );
@@ -173,14 +192,26 @@ export default class RequestsTable extends React.Component {
         <Pagination
           style={styles.paginator}
           defaultActivePage={1}
-          ellipsisItem={{ content: <Icon name='ellipsis horizontal' />, icon: true }}
-          firstItem={{ content: <Icon name='angle double left' />, icon: true }}
-          lastItem={{ content: <Icon name='angle double right' />, icon: true }}
-          prevItem={{ content: <Icon name='angle left' />, icon: true }}
-          nextItem={{ content: <Icon name='angle right' />, icon: true }}
+          ellipsisItem={{
+            content: <Icon name="ellipsis horizontal" />,
+            icon: true
+          }}
+          firstItem={{ content: <Icon name="angle double left" />, icon: true }}
+          lastItem={{ content: <Icon name="angle double right" />, icon: true }}
+          prevItem={{ content: <Icon name="angle left" />, icon: true }}
+          nextItem={{ content: <Icon name="angle right" />, icon: true }}
           totalPages={this.pagination.totalPages}
-          onPageChange={this.changePage.bind(this)} />
+          onPageChange={this.changePage}
+        />
       </div>
     );
   }
 }
+
+const mapStateToProps = state => ({
+  requests: state.requests.all
+});
+
+RequestsTable.defaultProps = {};
+
+export default connect(mapStateToProps, null)(RequestsTable);

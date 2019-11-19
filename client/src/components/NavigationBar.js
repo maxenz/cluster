@@ -10,6 +10,7 @@ import jwt_decode from "jwt-decode";
 import setAuthToken from "../setAuthToken";
 import { store as notificationStore } from "react-notifications-component";
 import store from "../store";
+import { updateRequestInformation } from "../actions/requests";
 import {
   REQUESTS_STATUS_READY_TO_PRINT,
   REQUESTS_STATUS_SENT_BY_USER
@@ -31,24 +32,26 @@ const style = {
   }
 };
 
-const showNotification = message => {
-  notificationStore.addNotification({
-    title: "Atención!",
-    message: message,
-    type: "success",
-    insert: "top",
-    container: "top-right",
-    animationIn: ["animated", "fadeIn"],
-    animationOut: ["animated", "fadeOut"],
-    dismiss: {
-      duration: 4000,
-      onScreen: true
-    }
-  });
-};
-
 class NavigationBar extends Component {
+  showNotification = data => {
+    notificationStore.addNotification({
+      title: "Atención!",
+      message: data.message,
+      type: "success",
+      insert: "top",
+      container: "top-right",
+      animationIn: ["animated", "fadeIn"],
+      animationOut: ["animated", "fadeOut"],
+      dismiss: {
+        duration: 4000,
+        onScreen: true
+      }
+    });
+    this.props.updateRequestInformation(data.request);
+  };
+
   initiateSocketConnection = (userId, admin) => {
+    const comp = this;
     const socket = io.connect("http://localhost:5001", {
       query: `userId=${userId}`
     });
@@ -57,7 +60,7 @@ class NavigationBar extends Component {
       : "request-notification";
 
     socket.on(channel, function(data) {
-      showNotification(data);
+      comp.showNotification(data);
     });
   };
 
@@ -193,6 +196,9 @@ const mapDispatchToProps = dispatch => {
     },
     setCurrentUser: decodedUser => {
       dispatch(setCurrentUser(decodedUser));
+    },
+    updateRequestInformation: req => {
+      dispatch(updateRequestInformation(req));
     }
   };
 };
