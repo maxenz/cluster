@@ -221,7 +221,7 @@ export class Requests extends React.Component {
     axios
       .post("/api/payments/", {
         request_id: id,
-        back_url: "https://fierce-bayou-11830.herokuapp.com/requests/"
+        back_url: "https://cluster-sample.herokuapp.com/requests/"
       })
       .then(res => {
         window.open(res.data.link, "_self");

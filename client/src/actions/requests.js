@@ -76,9 +76,9 @@ export const updateRequest = (request) => {
 };
 
 export const payRequest = (id) => {
-  const req = axios.post('/api/payments/generate', {
+  const req = axios.post("/api/payments/generate", {
     request_id: id,
-    back_url: 'https://www.ole.com.ar',
+    back_url: "https://cluster-sample.herokuapp.com/"
   });
 
   return req.then(

@@ -85,18 +85,24 @@ exports.update = (req, res) => {
 
       if (isAdminUpdate(req.body.status)) {
         if (req.socketClients[req.body.created_by]) {
-          req.io.sockets.connected[
-            req.socketClients[req.body.created_by].socket
-          ].emit("request-notification", {
+          const socket = req.io.sockets.connected[req.socketClients[req.body.created_by].socket];
+          console.log(socket);
+          socket.emit("request-notification", {
             message: getUpdateMessageByStatus(req.body),
             request: req.body
           });
         }
       } else {
-        req.io.emit("admin-request-notification", {
-          message: getUpdateMessageByStatus(req.body),
-          request: req.body
-        });
+        Object.keys(req.socketClients).forEach(clientId => {
+          if (req.socketClients[clientId].admin === "true") {
+              const socket = req.io.sockets.connected[req.socketClients[clientId].socket];
+                  
+              socket.emit("request-notification", {
+                message: getUpdateMessageByStatus(req.body),
+                request: req.body
+              });
+          }
+        })
       }
 
       if (req.body.status === REQUESTS_STATUS_QUOTED_BY_ADMIN) {

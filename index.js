@@ -29,26 +29,24 @@ let socketClients = {};
 
 const server = require("http").Server(app);
 let io = require("socket.io")(server);
-server.listen(5001);
+server.listen(port);
 
 io.on("connection", function(socket) {  
   socketClients[socket.handshake.query.userId] = {
-    socket: socket.id
+    socket: socket.id,
+    admin: socket.handshake.query.admin
   };  
 });
 
 app.use(function(req, res, next) {
   req.io = io;
   req.socketClients = socketClients;
+  console.log(socketClients);
   next();
 });
 
 app.use("/api/users", users);
 app.use("/api", apiRoutes);
-
-app.listen(port, function() {
-  console.log("Running cluster3d server on port " + port);
-});
 
 // Serve static files from the React app
 app.use(express.static(path.join(__dirname, "client/build")));

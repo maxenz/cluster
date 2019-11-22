@@ -37,6 +37,12 @@ class RequestsTable extends React.Component {
     this.processPage();
   }
 
+  componentDidUpdate(prevProps) {
+    if (prevProps.requests !== this.props.requests) {
+      this.processPage();
+    }
+  }
+
   processPage = () => {
     let list = Object.values(this.props.requests);
     let query = this.state.query;

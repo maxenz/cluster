@@ -52,14 +52,11 @@ class NavigationBar extends Component {
 
   initiateSocketConnection = (userId, admin) => {
     const comp = this;
-    const socket = io.connect("http://localhost:5001", {
-      query: `userId=${userId}`
+    const socket = io.connect("", {
+      query: `userId=${userId}&admin=${admin}`      
     });
-    const channel = admin
-      ? "admin-request-notification"
-      : "request-notification";
 
-    socket.on(channel, function(data) {
+    socket.on('request-notification', function(data) {      
       comp.showNotification(data);
     });
   };
