@@ -50,6 +50,58 @@ const QuotingForm = props => {
           >
             <Form.Input
               fluid
+              placeholder="Alto (cm)"
+              name="height"
+              type="number"
+              icon="object group"
+              iconPosition="left"
+              value={request.height || ""}
+              onChange={event =>
+                props.handleFormChange(event.target.name, event.target.value)
+              }
+            />
+
+            <Form.Input
+              fluid
+              placeholder="Ancho (cm)"
+              name="width"
+              type="number"
+              icon="object group"
+              iconPosition="left"
+              value={request.width || ""}
+              onChange={event =>
+                props.handleFormChange(event.target.name, event.target.value)
+              }
+            /> 
+
+                        <Form.Input
+              fluid
+              placeholder="Profundidad (cm)"
+              name="depth"
+              type="number"
+              icon="object group"
+              iconPosition="left"
+              value={request.depth || ""}
+              onChange={event =>
+                props.handleFormChange(event.target.name, event.target.value)
+              }
+            />
+
+            <Form.Input
+              fluid
+              placeholder="Peso (gr)"
+              name="weight"
+              type="number"
+              icon="balance scale"
+              iconPosition="left"
+              value={request.weight || ""}
+              onChange={event =>
+                props.handleFormChange(event.target.name, event.target.value)
+              }
+            />  
+
+            <Form.Input
+              fluid
               placeholder="Precio"
               name="price"
               type="number"

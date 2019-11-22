@@ -15,6 +15,18 @@ const requestSchema = mongoose.Schema({
     type: Number,
     required: true,
   },
+  height: {
+    type: Number
+  },
+  width: {
+    type: Number
+  },
+  depth: {
+    type: Number
+  },
+  weight: {
+    type: Number
+  },
   file_name: {
     type: String,
     required: true,

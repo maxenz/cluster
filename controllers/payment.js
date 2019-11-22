@@ -7,8 +7,10 @@ const REQUESTS_STATUS_READY_TO_PRINT = 4;
 require('mongoose-money');
 
 MP.configure({
-  client_id: '3542881606359725',
-  client_secret: 'h30rMBfe3jojeHJxKadyL8BOjBen8JjE'
+  // client_id: '3542881606359725',
+  // client_secret: 'h30rMBfe3jojeHJxKadyL8BOjBen8JjE'
+  client_id: '8666928984748381',
+  client_secret: 'RdBdfH1toMzLiy38kUO77LOFQwRwmtYb'
 });
 
 exports.generate = function (req, res) {
@@ -35,6 +37,11 @@ exports.generate = function (req, res) {
                     unit_price: parseFloat(request.price.amount)
                   }
                 ],
+                shipments: (request.height && request.width && request.depth && request.weight) ? {
+                  mode: 'me2',
+                  local_pickup: true,
+                  dimensions: request.height + 'x' + request.width + 'x' + request.depth + ',' + request.weight
+                } : undefined, 
                 back_urls: {
                   success: req.body.back_url,
                   failure: req.body.back_url,

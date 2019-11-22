@@ -310,6 +310,10 @@ export class Requests extends React.Component {
             handleFormChange={this.handleFormChange}
             fileUrl={this.state.fileUrl}
             formIsInvalid={
+              !this.state.request.height || this.state.request.height === "" ||
+              !this.state.request.width || this.state.request.width === "" ||
+              !this.state.request.depth || this.state.request.depth === "" ||
+              !this.state.request.weight || this.state.request.weight === "" ||
               this.state.request.price === "" ||
               !this.state.request.total_printing_time
             }
