@@ -14,7 +14,8 @@ import {
   REQUESTS_STATUS_QUOTE_REJECTED,
   REQUESTS_STATUS_QUOTED_BY_ADMIN,
   REQUESTS_STATUS_READY_TO_DELIVER,
-  REQUESTS_STATUS_CANCELED
+  REQUESTS_STATUS_CANCELED,
+  REQUESTS_STATUS_READY_TO_PRINT
 } from "../../constants/requests";
 import {
   PRINTER_STATUS_ENABLED,
@@ -143,7 +144,7 @@ export class Requests extends React.Component {
       });
   };
 
-  handleStartPrinting = id => {
+  handleStartPrinting = (id,isProposalPrint) => {
     const availablePrinters = Object.values(this.props.printers).filter(
       x => x.status === PRINTER_STATUS_ENABLED
     );
@@ -154,11 +155,12 @@ export class Requests extends React.Component {
     this.setState({
       showRequestsTable: false,
       showPrintingForm: true,
+      isProposalPrint: isProposalPrint,
       request
     });
   };
 
-  handleFinishPrinting = id => {
+  handleFinishPrinting = id => {    
     const request = this.props.requests[id];
     this.props
       .saveRequest({
@@ -169,7 +171,12 @@ export class Requests extends React.Component {
         this.props.savePrinter({
           ...this.props.printers[request.selected_printer_id],
           status: PRINTER_STATUS_ENABLED
-        });
+        }).then(()=>{
+          const nextRequestToPrint = this.getNextRequestToPrint();
+          if(nextRequestToPrint){
+            this.handleStartPrinting(nextRequestToPrint._id,true);
+          }
+        });        
       });
   };
 
@@ -251,11 +258,19 @@ export class Requests extends React.Component {
     return paymentMessage;
   };
 
+  getNextRequestToPrint = () => {
+    const nextRequest = Object.values(this.props.requests).slice().filter((e) => e.status === REQUESTS_STATUS_READY_TO_PRINT).sort((a, b) => b.create_date - a.create_date);
+    if(nextRequest.length > 0){
+      return nextRequest[0];
+    }
+  }
+
   render() {
     const {
       showRequestsTable,
       showQuoteForm,
       showPrintingForm,
+      isProposalPrint,
       showCreateEditForm,
       request
     } = this.state;
@@ -329,6 +344,7 @@ export class Requests extends React.Component {
             handleSelectedPrinterChange={this.handleSelectedPrinterChange}
             printers={this.props.printers}
             handleGoBack={this.cleanState}
+            isProposalPrint={isProposalPrint}
           />
         )}
         {showCreateEditForm && (
