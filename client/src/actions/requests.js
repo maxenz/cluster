@@ -4,7 +4,7 @@ import * as types from './types';
 export const saveRequest = request => (dispatch, getState) => {
   const userId = getState().auth.user.id;
   const promise = request._id ?
-      updateRequest(request) : createRequest(request, userId);
+  updateRequest(request) : createRequest(request, userId);
   return promise
       .then(res => {
         dispatch({
@@ -62,14 +62,23 @@ export const createRequest = (request, userId) => {
   return axios.post('/api/requests/', request);
 };
 
+export const updateRequestInformation = request => dispatch => {
+  dispatch({
+    type: types.REQUEST_SAVE_SUCCESS,
+    payload: {
+      data: request
+    }
+  });
+}
+
 export const updateRequest = (request) => {
   return axios.put(`/api/requests/${request._id}`, request);
 };
 
 export const payRequest = (id) => {
-  const req = axios.post('/api/payments/generate', {
+  const req = axios.post("/api/payments/generate", {
     request_id: id,
-    back_url: 'https://www.ole.com.ar',
+    back_url: "https://cluster-sample.herokuapp.com/"
   });
 
   return req.then(
